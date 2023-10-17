@@ -22,7 +22,6 @@
       "outDir": "./dist/tsc/",
       "types": [
         "node",
-        "jest"
       ],
       "lib": [
         "ES6",
