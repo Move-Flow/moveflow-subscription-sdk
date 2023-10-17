@@ -1,69 +1,58 @@
-import { convertRateTypeToSeconds } from './utils/intervalsConversion';
 import { ethers } from 'ethers';
-import SubscriptionABI from './lib/contractABIs/subsrciptionABI.json';
+import subscriptionAbi from "./lib/contractABIs/subsrciptionABI.json"
+import {
+  CreateSubscriptionInput,
+  DepositFromSenderInput,
+  WithdrawFromRecipientInput,
+} from './utils/type';
 
-const ethereumSubscription = async () => {
-    try {
-        const infuraUrl = 'https://sepolia.infura.io/v3/577e58eea0d74c13b627c1e3808cd711';
-        const provider = new ethers.JsonRpcProvider(infuraUrl);
+// Define the ABI
+const subscriptionABI = [
+  // ... (Your provided ABI here)
+];
 
-        // dump wallet private key that contains sepolia 
-        const privateKey = '753e10bc305827ad956b98c178ed80b0c98900d40a6ecec3e05fe373ad9f85a3';
-        const wallet = new ethers.Wallet(privateKey, provider);
+// Create a SubscriptionContract instance
+const contract = new ethers.Contract('your_contract_address',  subscriptionAbi)
 
-     
-        const contractAddress = '0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099';
-        const recipient = '0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099';
-        const subscriptionAmount = 2;
-        const tokenAddress = '0x949bEd886c739f1A3273629b3320db0C5024c719';
-        const startTime = 1634414400;
-        const stopTime = 1637006400;
-        const fixedRate = 1;
+const createSubscription = async (input: CreateSubscriptionInput): Promise<void> => {
+  const {
+    recipient,
+    deposit,
+    tokenAddress,
+    startTime,
+    stopTime,
+    interval,
+    fixedRate,
+  } = input;
 
-        // Call the convertRateTypeToSeconds function to calculate the interval
-        const rateType = 'day';
-        const interval = convertRateTypeToSeconds(rateType);
-
-        // contract instance using the Subscription ABI
-        const contract = new ethers.Contract(contractAddress, SubscriptionABI, wallet);
-
-        const createSubscriptionTx = await contract.createSubscription(
-            recipient,
-            subscriptionAmount,
-            tokenAddress,
-            startTime,
-            stopTime,
-            interval,
-            fixedRate
-        );
-
-  
-            const receipt = await createSubscriptionTx.wait();
-            console.log("subscription created successful:",  receipt )
-
-            const nextId = await contract.nextSubscriptionId();
-
-                if (nextId !== undefined) {
-                    try {
-                        const subscriptionDetails = await contract.getSubscription(BigInt(nextId));
-                        console.log("Subscription Details:", subscriptionDetails);
-                    } catch (error) {
-                        console.error("Error fetching subscription details:", error);
-                    }
-                } else {
-                    console.error("Next subscription ID is undefined");
-                }
-        try {
-            // Now you can use the obtained nextId to get subscription details
-            const subscriptionDetails = await contract.getSubscription(BigInt(nextId));
-            console.log("Subscription Details:", subscriptionDetails);
-        } catch (error) {
-            console.error("Error fetching subscription details:", error);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
+  await contract.createSubscription(
+    recipient,
+    deposit,
+    tokenAddress,
+    startTime,
+    stopTime,
+    interval,
+    fixedRate
+  );
 };
 
-// Call the function
- ethereumSubscription();
+const getSubscription = async (subscriptionId:BigInt) => {
+  return await contract.getSubscription(subscriptionId);
+};
+
+const depositFromSender = async (input: DepositFromSenderInput): Promise<boolean> => {
+  const { subscriptionId, amount } = input;
+  return await contract.depositFromSender(subscriptionId, amount);
+};
+
+const withdrawFromRecipient = async (input: WithdrawFromRecipientInput): Promise<boolean> => {
+  const { subscriptionId, amount } = input;
+  return await contract.withdrawFromRecipient(subscriptionId, amount);
+};
+
+export {
+  createSubscription,
+  getSubscription,
+  depositFromSender,
+  withdrawFromRecipient,
+};
