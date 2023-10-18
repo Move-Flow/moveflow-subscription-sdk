@@ -25,6 +25,8 @@ export interface MoveflowConfig {
   }
 
 
+ 
+
 export interface DepositFromSenderInput {
   subscriptionId: BigInt;
   amount: BigInt;
