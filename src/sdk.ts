@@ -1,4 +1,4 @@
-import { ethers, Wallet } from 'ethers';
+import { ethers, } from 'ethers';
 import subscriptionAbi from "./lib/contractABIs/subsrciptionABI.json";
 import {
   CreateSubscriptionInput,
@@ -9,9 +9,10 @@ import {
 
 const infuraUrl = 'https://sepolia.infura.io/v3/577e58eea0d74c13b627c1e3808cd711';
 const provider = new ethers.JsonRpcProvider(infuraUrl);
-const signer = provider.getSigner();
+// const signer = provider.getSigner();
 const contractAddress = '0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099';
-const contract = new ethers.Contract(contractAddress, subscriptionAbi, signer);
+const contract = new ethers.Contract(contractAddress, subscriptionAbi, provider);
+console.log(contract)
 
 const createSubscription = async (input: CreateSubscriptionInput): Promise<void> => {
   try {
@@ -70,6 +71,7 @@ const withdrawFromRecipient = async (input: WithdrawFromRecipientInput): Promise
     throw new Error('Failed to withdraw from recipient. Please check the input and try again.');
   }
 };
+
 
 export {
   createSubscription,
