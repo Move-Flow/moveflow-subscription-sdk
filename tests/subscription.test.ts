@@ -34,7 +34,4 @@ describe('createSubscription', () => {
         }
     });
 
-    afterAll(() => {
-        // Cleanup, close any connections, etc.
-    });
 });

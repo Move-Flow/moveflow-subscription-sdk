@@ -5,7 +5,11 @@ import {
   DepositFromSenderInput,
   WithdrawFromRecipientInput,
   GetSubscriptionOutput,
+  GetSubscriptionsResponse
 } from './utils/type';
+import { Client } from 'urql';
+import { GET_SUBSCRIPTIONS } from './utils/api/queries';
+
 
 const infuraUrl = 'https://sepolia.infura.io/v3/577e58eea0d74c13b627c1e3808cd711';
         const provider = new ethers.JsonRpcProvider(infuraUrl);
@@ -73,10 +77,26 @@ const withdrawFromRecipient = async (input: WithdrawFromRecipientInput): Promise
   }
 };
 
+const listSubscriptions = async (client: Client): Promise<GetSubscriptionsResponse> => {
+  try {
+    const response = await client.query(GET_SUBSCRIPTIONS, {}).toPromise();
+    if (response.error) {
+      console.error('Error fetching subscriptions:', response.error);
+      throw new Error('Failed to fetch subscriptions.');
+    }
+    console.log("data fetched successful", response)
+   return response.data
+  } catch (error) {
+    console.error('Error fetching subscriptions:', error);
+    throw new Error('Failed to fetch subscriptions.');
+  }
+};
+
 
 export {
   createSubscription,
   getSubscription,
   depositFromSender,
   withdrawFromRecipient,
+  listSubscriptions,
 };

@@ -76,4 +76,59 @@ export interface WithdrawFromRecipientEvent extends Event {
   amount: BigInt;
 }
 
-// Add other event interfaces as needed
+
+export interface RecipientWithdrawLog {
+  id: string;
+  withdrawAmount: BigInt;
+  withdrawTime: BigInt;
+  withdrawnCount: BigInt;
+}
+
+export interface SenderDepositeLog {
+  id: string;
+  depositeAmount: BigInt;
+  depositeTime: BigInt;
+}
+
+export interface SenderWithdrawLog {
+  id: string;
+  withdrawAmount: BigInt;
+  withdrawTime: BigInt;
+}
+
+export interface Recipient {
+  id: string;
+  withdrawnBalance: BigInt;
+}
+
+export interface Sender {
+  id: string;
+  deposit: BigInt;
+  withdrawnToRecipient: BigInt;
+}
+
+export interface SubscriptionInfo {
+  id: string;
+  deposit: BigInt;
+  fixedRate: BigInt;
+  withdrawnBalance: BigInt;
+  remainingBalance: BigInt;
+  startTime: BigInt;
+  stopTime: BigInt;
+  interval: BigInt;
+  withdrawableCount: BigInt;
+  withdrawnCount: BigInt;
+  lastWithdrawTime: BigInt;
+  recipient: Recipient;
+  sender: Sender;
+  tokenAddress: string;
+  isEntity: boolean;
+  recipientWithdrawLog: RecipientWithdrawLog[];
+  senderDepositeLog: SenderDepositeLog[];
+  senderWithdrawLog: SenderWithdrawLog[];
+}
+
+export interface GetSubscriptionsResponse {
+  subscriptionLists:  SubscriptionInfo[];
+}
+
