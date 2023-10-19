@@ -1,5 +1,5 @@
 import { ethers, } from 'ethers';
-import subscriptionAbi from "./lib/contractABIs/subsrciptionABI.json";
+import SubscriptionABI from "./lib/contractABIs/subsrciptionABI.json";
 import {
   CreateSubscriptionInput,
   DepositFromSenderInput,
@@ -8,11 +8,12 @@ import {
 } from './utils/type';
 
 const infuraUrl = 'https://sepolia.infura.io/v3/577e58eea0d74c13b627c1e3808cd711';
-const provider = new ethers.JsonRpcProvider(infuraUrl);
-// const signer = provider.getSigner();
-const contractAddress = '0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099';
-const contract = new ethers.Contract(contractAddress, subscriptionAbi, provider);
-console.log(contract)
+        const provider = new ethers.JsonRpcProvider(infuraUrl);
+        const contractAddress = '0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099';
+        // dump wallet private key that contains sepolia 
+        const privateKey = '753e10bc305827ad956b98c178ed80b0c98900d40a6ecec3e05fe373ad9f85a3';
+        const wallet = new ethers.Wallet(privateKey, provider);
+        const contract = new ethers.Contract(contractAddress, SubscriptionABI, wallet);
 
 const createSubscription = async (input: CreateSubscriptionInput): Promise<void> => {
   try {
