@@ -53,10 +53,15 @@ const createSubscription = async (input: CreateSubscriptionInput): Promise<void>
   const userBalance = await wallet.provider?.getBalance(wallet.address);
   const depositAmount = ethers.parseEther(deposit.toString());
 
-  if (userBalance && depositAmount && BigInt(userBalance.toString()) < BigInt(depositAmount.toString())) {
+  if (
+    userBalance &&
+    depositAmount &&
+    fixedRate &&
+    BigInt(userBalance.toString()) < BigInt(depositAmount.toString()) + BigInt(fixedRate.toString())
+  ) {
     throw new Error('User balance is insufficient to create the subscription.');
   }
-
+  
   // Create the subscription
   try {
     await contract.createSubscription(
