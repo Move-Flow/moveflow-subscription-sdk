@@ -17,3 +17,5 @@ export function initializeProvider(chain: Chain): JsonRpcProvider {
 
   return new ethers.JsonRpcProvider(infuraUrl);
 }
+
+

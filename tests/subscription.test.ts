@@ -1,11 +1,12 @@
 import { ethers} from 'ethers';
-import { createSubscription } from '../src';
-
+import { createSubscription, withdrawFromRecipient } from '../src';
+import { subscriptionData } from './api/listSubscription.test';
 describe('createSubscription', () => {
     let provider:any;
 
     beforeAll(() => {
-        const infuraUrl = 'https://sepolia.infura.io/v3/577e58eea0d74c13b627c1e3808cd711';
+        const sepoliaKey = process.env.SEPOLIA_KEY;
+        const infuraUrl = `https://sepolia.infura.io/v3/${sepoliaKey}`;
         provider = new ethers.JsonRpcProvider(infuraUrl);
     });
 
@@ -48,6 +49,7 @@ describe('createSubscription', () => {
             if (userBalance && depositAmount && userBalance.lt(depositAmount + input.fixedRate)) {
                 throw new Error('User balance is insufficient to create the subscription.');
             }
+
             await createSubscription(input);
     
             // Additional assertions for success if needed
@@ -60,3 +62,42 @@ describe('createSubscription', () => {
     
 });
 
+
+test('withdrawFromRecipient can work', async () => {
+    const amount: BigInt = BigInt(1); 
+  
+    // Act and Assert
+    try {
+      if (subscriptionData && subscriptionData.subscriptionLists.length > 0) {
+        for (const subscription of subscriptionData.subscriptionLists) {
+          const subscriptionId = BigInt(subscription.id);
+          console.log("subscriptionIds", subscriptionId)
+  
+          // Validation Checks
+          // Check if subscriptionId is a positive integer
+          if (!subscriptionId || subscriptionId.toString() <= BigInt(0).toString()) {
+            throw new Error('Invalid subscription ID. Please provide a valid positive integer.');
+          }
+  
+          // Check if the withdrawal amount is a positive number
+          if (!amount || amount.toString() <= BigInt(0).toString()) {
+            throw new Error('Invalid withdrawal amount. Please provide a valid positive number.');
+          }
+  
+          // Call the withdrawFromRecipient function
+          const result = await withdrawFromRecipient({ subscriptionId, amount });
+  
+          // Additional assertions for success if needed
+          expect(result).toBeTruthy();
+        }
+      } else {
+        // No subscriptions found, fail the test
+        console.error('No subscription data found.');
+        throw new Error('No subscription data found.');
+      }
+    } catch (error) {
+      // Assert for failure
+      expect(error).toBeNull(); // Assert that no error was thrown
+    }
+  });
+  

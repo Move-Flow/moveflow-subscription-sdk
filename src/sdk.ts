@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+require('dotenv').config();
 import SubscriptionABI from './lib/contractABIs/subsrciptionABI.json';
 import {
   CreateSubscriptionInput,
@@ -11,7 +12,8 @@ import { Client } from 'urql';
 import { GET_SUBSCRIPTIONS } from './utils/api/queries';
 
 // Ethereum provider URL and contract information
-const infuraUrl = 'https://sepolia.infura.io/v3/577e58eea0d74c13b627c1e3808cd711';
+const sepoliaKey = process.env.SEPOLIA_KEY;
+const infuraUrl = `https://sepolia.infura.io/v3/${sepoliaKey}`;
 const contractAddress = '0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099';
 const privateKey = '753e10bc305827ad956b98c178ed80b0c98900d40a6ecec3e05fe373ad9f85a3';
 
@@ -106,14 +108,37 @@ const depositFromSender = async (input: DepositFromSenderInput): Promise<boolean
 const withdrawFromRecipient = async (input: WithdrawFromRecipientInput): Promise<boolean> => {
   try {
     const { subscriptionId, amount } = input;
-    return await contract.withdrawFromRecipient(subscriptionId, amount);
+    console.log(subscriptionId, amount)
+
+    // Check if subscriptionId is a positive integer
+    if (!subscriptionId || subscriptionId.toString() <= BigInt(0).toString()) {
+      throw new Error('Invalid subscription ID. Please provide a valid positive integer.');
+    }
+
+    // Check if the withdrawal amount is a positive number
+    if (!amount || amount.toString() <= BigInt(0).toString()) {
+      throw new Error('Invalid withdrawal amount. Please provide a valid positive number.');
+    }
+
+    // // Fetch subscription details to perform additional checks if needed
+    // const subscriptionDetails = await getSubscription(subscriptionId);
+    // Add additional checks based on subscription details if necessary
+
+    // Perform the withdrawal logic if all checks pass
+    await contract.withdrawFromRecipient(subscriptionId, amount);
+
+    // Return true if the withdrawal was initiated successfully
+    return true;
   } catch (error) {
     console.error('Error in withdrawFromRecipient:', error);
     throw new Error('Failed to withdraw from recipient. Please check the input and try again.');
   }
 };
 
-// List subscriptions
+
+
+// List created subscriptions
+
 const listSubscriptions = async (client: Client): Promise<GetSubscriptionsResponse> => {
   try {
     const response = await client.query(GET_SUBSCRIPTIONS, {}).toPromise();
@@ -121,13 +146,22 @@ const listSubscriptions = async (client: Client): Promise<GetSubscriptionsRespon
       console.error('Error fetching subscriptions:', response.error);
       throw new Error('Failed to fetch subscriptions.');
     }
-    console.log('Data fetched successfully:', response);
-    return response.data;
+    const subscriptionData = response.data as GetSubscriptionsResponse;
+
+    if (subscriptionData && Array.isArray(subscriptionData.subscriptionLists) && subscriptionData.subscriptionLists.length > 0) {
+      console.log('Data fetched successfully.', subscriptionData);
+      return subscriptionData;
+    } else {
+      console.error('No subscription data found.');
+      throw new Error('No subscription data found.');
+    }
   } catch (error) {
     console.error('Error fetching subscriptions:', error);
     throw new Error('Failed to fetch subscriptions.');
   }
 };
+
+
 
 export {
   createSubscription,
