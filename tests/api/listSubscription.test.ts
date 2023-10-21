@@ -1,15 +1,13 @@
-import { cacheExchange, createClient, fetchExchange } from 'urql';
-import { GetSubscriptionsResponse } from '../../src/utils/type';
-import { listSubscriptions } from '../../src/sdk';
+import { cacheExchange, createClient, fetchExchange } from "urql";
+import { GetSubscriptionsResponse } from "../../src/utils/type";
+import { listSubscriptions } from "../../src/sdk";
 
-const APIURL = 'https://api.thegraph.com/subgraphs/name/albinlau/moveflow-geroli';
+const APIURL =
+  "https://api.thegraph.com/subgraphs/name/albinlau/moveflow-geroli";
 
 const mockClient = createClient({
   url: APIURL,
-  exchanges: [
-    cacheExchange,
-    fetchExchange,
-  ],
+  exchanges: [cacheExchange, fetchExchange],
 });
 
 let subscriptionData: GetSubscriptionsResponse;
@@ -22,8 +20,8 @@ beforeAll(async () => {
   }
 });
 
-describe('listSubscriptions', () => {
-  test('listSubscriptions can work', () => {
+describe("listSubscriptions", () => {
+  test("listSubscriptions can work", () => {
     // Assert that the response and data are defined
     expect(subscriptionData).toBeDefined();
     expect(subscriptionData.subscriptionLists).toBeDefined();
@@ -47,7 +45,9 @@ describe('listSubscriptions', () => {
         // Assert that fixedRate, interval, and withdrawableCount are non-negative numbers as strings
         expect(Number(subscription.fixedRate)).toBeGreaterThanOrEqual(0);
         expect(Number(subscription.interval)).toBeGreaterThanOrEqual(0);
-        expect(Number(subscription.withdrawableCount)).toBeGreaterThanOrEqual(0);
+        expect(Number(subscription.withdrawableCount)).toBeGreaterThanOrEqual(
+          0
+        );
 
         // Assert that lastWithdrawTime, remainingBalance, startTime, and stopTime are valid timestamps as strings
         expect(Number.isNaN(Number(subscription.lastWithdrawTime))).toBe(false);
@@ -59,18 +59,21 @@ describe('listSubscriptions', () => {
         expect(subscription.tokenAddress).toBeTruthy();
 
         // Assert that withdrawnBalance and withdrawnCount are non-negative integers as strings
-        expect(Number.isInteger(Number(subscription.withdrawnBalance))).toBe(true);
-        expect(Number.isInteger(Number(subscription.withdrawnCount))).toBe(true);
+        expect(Number.isInteger(Number(subscription.withdrawnBalance))).toBe(
+          true
+        );
+        expect(Number.isInteger(Number(subscription.withdrawnCount))).toBe(
+          true
+        );
         expect(Number(subscription.withdrawnBalance)).toBeGreaterThanOrEqual(0);
         expect(Number(subscription.withdrawnCount)).toBeGreaterThanOrEqual(0);
       }
     } else {
       // No subscriptions found, fail the test
-      console.error('No subscription data found.');
-      throw new Error('No subscription data found.');
+      console.error("No subscription data found.");
+      throw new Error("No subscription data found.");
     }
   });
 });
-
 
 export { subscriptionData };

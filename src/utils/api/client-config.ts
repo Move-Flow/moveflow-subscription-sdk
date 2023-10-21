@@ -1,6 +1,7 @@
-import { createClient, cacheExchange, fetchExchange } from 'urql';
+import { createClient, cacheExchange, fetchExchange } from "urql";
 
-const APIURL = 'https://api.thegraph.com/subgraphs/name/albinlau/moveflow-geroli';
+const APIURL =
+  "https://api.thegraph.com/subgraphs/name/albinlau/moveflow-geroli";
 
 const client = createClient({
   url: APIURL,

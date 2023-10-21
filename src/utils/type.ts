@@ -1,5 +1,3 @@
-
-
 // Interface for Smart Contract Input Types
 export interface CreateSubscriptionInput {
   recipient: string;
@@ -11,21 +9,16 @@ export interface CreateSubscriptionInput {
   fixedRate: BigInt;
 }
 
-
 export interface MoveflowConfig {
-    chain?: Chain;
-    apiKey?: string;
-    apiBaseUrl?: string;
-  }
+  chain?: Chain;
+  apiKey?: string;
+  apiBaseUrl?: string;
+}
 
-
-  export enum Chain {
-    Goerli = "goerli",
-    Sepolia = "sepolia",
-  }
-
-
- 
+export enum Chain {
+  Goerli = "goerli",
+  Sepolia = "sepolia",
+}
 
 export interface DepositFromSenderInput {
   subscriptionId: BigInt;
@@ -56,7 +49,6 @@ export interface GetSubscriptionOutput {
   fixedRate: BigInt;
 }
 
-
 // Interface for Smart Contract Events
 export interface CreateSubscriptionEvent extends Event {
   subscriptionId: BigInt;
@@ -75,7 +67,6 @@ export interface WithdrawFromRecipientEvent extends Event {
   recipient: string;
   amount: BigInt;
 }
-
 
 export interface RecipientWithdrawLog {
   id: string;
@@ -129,6 +120,5 @@ export interface SubscriptionInfo {
 }
 
 export interface GetSubscriptionsResponse {
-  subscriptionLists:  SubscriptionInfo[];
+  subscriptionLists: SubscriptionInfo[];
 }
-
