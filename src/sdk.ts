@@ -7,19 +7,19 @@ import {
   WithdrawFromRecipientInput,
   GetSubscriptionOutput,
   GetSubscriptionsResponse,
+  Chain,
 } from "./utils/type";
 import { Client } from "urql";
 import { GET_SUBSCRIPTIONS } from "./utils/api/queries";
+import { initializeProvider } from "./utils/chain";
 
 // Ethereum provider URL and contract information
-const sepoliaKey = process.env.SEPOLIA_KEY;
-const infuraUrl = `https://sepolia.infura.io/v3/${sepoliaKey}`;
+
 const contractAddress = "0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099";
 const privateKey =
   "753e10bc305827ad956b98c178ed80b0c98900d40a6ecec3e05fe373ad9f85a3";
-
-// Create an Ethereum provider and wallet
-const provider = new ethers.JsonRpcProvider(infuraUrl);
+const chain = Chain.Sepolia; // Set the chain here (e.g., Sepolia, Goerli)
+const provider = initializeProvider(chain); // Initialize the provider
 const wallet = new ethers.Wallet(privateKey, provider);
 const contract = new ethers.Contract(contractAddress, SubscriptionABI, wallet);
 
@@ -204,8 +204,6 @@ const withdrawFromRecipient = async (
 ): Promise<boolean> => {
   try {
     const { subscriptionId, amount } = input;
-    console.log(subscriptionId, "withdraw");
-
     // Check if subscriptionId is a positive integer
     if (!subscriptionId || subscriptionId.toString() <= BigInt(0).toString()) {
       throw new Error(

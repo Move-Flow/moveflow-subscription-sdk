@@ -29,6 +29,10 @@ export interface WithdrawFromRecipientInput {
   subscriptionId: BigInt;
   amount: BigInt;
 }
+export interface GetSubscriptionInput {
+  subscriptionId: BigInt;
+}
+
 
 // Interface for Smart Contract Output Types
 export interface CreateSubscriptionOutput {

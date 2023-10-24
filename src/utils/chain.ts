@@ -1,13 +1,14 @@
 import { ethers, JsonRpcProvider } from "ethers";
 import { Chain } from "./type";
+require("dotenv").config();
 
 export function initializeProvider(chain: Chain): JsonRpcProvider {
   let infuraUrl;
+  const infuraSepoliaID = process.env.infuraSepolia_ID;
 
   switch (chain) {
     case Chain.Sepolia:
-      infuraUrl =
-        "https://sepolia.infura.io/v3/577e58eea0d74c13b627c1e3808cd711";
+      infuraUrl = `https://sepolia.infura.io/v3/${infuraSepoliaID}`;
       break;
     case Chain.Goerli:
       infuraUrl = "https://goerli.infura.io/v3/";
