@@ -4,18 +4,18 @@ require("dotenv").config();
 
 export function initializeProvider(chain: Chain): JsonRpcProvider {
   let infuraUrl;
-  const infuraSepoliaID = process.env.infuraSepolia_ID;
+  const infuraID = process.env.infura_ID;
 
   switch (chain) {
     case Chain.Sepolia:
-      infuraUrl = `https://sepolia.infura.io/v3/${infuraSepoliaID}`;
+      infuraUrl = `https://sepolia.infura.io/v3/${infuraID}`;
       break;
     case Chain.Goerli:
-      infuraUrl = "https://goerli.infura.io/v3/";
+      infuraUrl = `https://goerli.infura.io/v3/${infuraID}`;
       break;
     default:
       throw new Error("Unsupported network");
   }
-
-  return new ethers.JsonRpcProvider(infuraUrl);
+  //
+  https: return new ethers.JsonRpcProvider(infuraUrl);
 }

@@ -14,7 +14,11 @@ let subscriptionData: GetSubscriptionsResponse;
 
 beforeAll(async () => {
   try {
-    subscriptionData = await listSubscriptions(mockClient);
+    subscriptionData = await listSubscriptions(
+      mockClient,
+      //Fetching subscriptions from this wallet address
+      "0x3f4ce45464915a5dfd1ed7e1175877d498dd2606"
+    );
   } catch (error) {
     console.log(error);
   }

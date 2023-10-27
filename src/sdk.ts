@@ -169,12 +169,15 @@ const getSubscription = async (
 };
 
 // List created subscriptions
-
 const listSubscriptions = async (
-  client: Client
+  client: Client,
+  sender: string
 ): Promise<GetSubscriptionsResponse> => {
   try {
-    const response = await client.query(GET_SUBSCRIPTIONS, {}).toPromise();
+    const senderLowerCase = sender.toLowerCase();
+    const response = await client
+      .query(GET_SUBSCRIPTIONS, { sender: senderLowerCase })
+      .toPromise();
     if (response.error) {
       console.error("Error fetching subscriptions:", response.error);
       throw new Error("Failed to fetch subscriptions.");
@@ -186,7 +189,8 @@ const listSubscriptions = async (
       Array.isArray(subscriptionData.subscriptionLists) &&
       subscriptionData.subscriptionLists.length > 0
     ) {
-      console.log("Data fetched successfully.", subscriptionData);
+      //wallet address
+      console.log("subscription data fetched successfully", subscriptionData);
       return subscriptionData;
     } else {
       console.error("No subscription data found.");

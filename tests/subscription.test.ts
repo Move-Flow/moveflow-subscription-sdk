@@ -57,13 +57,12 @@ describe("SubscriptionTest", () => {
       if (
         userBalance &&
         depositAmount &&
-        userBalance.lt(depositAmount + input.fixedRate)
+        userBalance < depositAmount + input.fixedRate
       ) {
         throw new Error(
           "User balance is insufficient to create the subscription."
         );
       }
-
       await createSubscription(input);
 
       // Additional assertions for success if needed
