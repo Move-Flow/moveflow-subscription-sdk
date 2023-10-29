@@ -36,7 +36,7 @@ const contract = new ethers.Contract(contractAddress, SubscriptionABI, wallet);
 ## Usage 
 The SDK provides several functions for managing subscriptions. Here's how to use them:
 
-### CreateSubscription 
+###  Create a Subscription
 ```
 /**
  * Create a subscription with validation checks.
@@ -87,7 +87,7 @@ This method allows you to create a subscription contract with various parameters
 
 
 
-### depositeFromSender
+### Deposit Funds from Sender
 
 ```
 /**
@@ -127,8 +127,88 @@ This method allows the sender to deposit funds to a specific subscription, perfo
 
 
 
-### listSubscriptions: List subscriptions created by a specific sender.
+### List Subscriptions
+
+```
+/**
+ * List subscriptions created by a specific sender.
+ *
+ * @param {Client} client - The GraphQL client used for making queries.
+ * @param {string} sender - The sender's address for which to list subscriptions.
+ * @returns {Promise<GetSubscriptionsResponse>} Returns subscription data if successful.
+ * @throws {Error} Throws an error if the query fails or no subscriptions are found.
+ */
+const listSubscriptions = async (client: Client, sender: string): Promise<GetSubscriptionsResponse> => {
+  // ... code ...
+};
+
+// Example usage:
+const senderAddress = "0xSenderAddress";
+const subscriptions = listSubscriptions(client, senderAddress);
+```
+##### Parameters:
+
+client (Type: Client): The GraphQL client used for making queries.
+
+sender (Type: string): The sender's address for which to list subscriptions.
+
+
+Description:
+
+This method fetches a list of subscriptions created by a specific sender, using a GraphQL client. It ensures the sender's address is valid and that subscriptions are found.
 
 
 
 
+
+### Withdraw Funds from Recipient
+
+```
+/**
+ * Withdraw funds from the recipient's side of the subscription.
+ *
+ * @param {WithdrawFromRecipientInput} input - The input data for withdrawal.
+ * @returns {Promise<boolean>} Returns `true` if the withdrawal was successful.
+ * @throws {Error} Throws an error if validation checks fail or the withdrawal operation fails.
+ */
+const withdrawFromRecipient = async (input: WithdrawFromRecipientInput): Promise<boolean> => {
+  // ... code ...
+};
+
+// Example usage:
+const withdrawalData = {
+  subscriptionId: 1, // ID of the subscription to withdraw from
+  amount: 0.05, // Amount to withdraw in ETH
+};
+
+withdrawFromRecipient(withdrawalData);
+
+```
+
+##### Parameters:
+
+input (Type: WithdrawFromRecipientInput): The input data for withdrawing funds.
+Input Fields:
+
+subscriptionId (Type: number): The ID of the subscription to withdraw tokens from.
+amount (Type: number): The amount of tokens to withdraw.
+
+
+##### Description:
+
+This method initiates a withdrawal from the recipient's side of the subscription. It validates the subscription ID and withdrawal amount, ensuring they are valid and positive.
+
+
+
+
+# Best Practices
+
+Ensure a reliable Ethereum provider and correct chain initialization.
+
+Handle errors and exceptions effectively when using these methods.
+
+Perform validation checks on input data to prevent errors.
+
+Check return values for deposit and withdrawal methods to ensure success.
+
+This documentation provides you with the necessary information to interact with Ethereum smart contracts for managing subscriptions effectively. Ensure that you follow best practices, conduct thorough testing, and adapt the code and guidelines to your specific project requirements.
