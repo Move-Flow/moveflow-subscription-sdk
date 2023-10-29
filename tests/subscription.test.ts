@@ -131,35 +131,35 @@ describe("SubscriptionTest", () => {
     }
   });
 
-  test("getSubscription can work", async () => {
-    // Act and Assert
-    try {
-      if (subscriptionData && subscriptionData.subscriptionLists.length > 0) {
-        const firstSubscription = subscriptionData.subscriptionLists[0];
-        const subscriptionId = BigInt(firstSubscription.id);
-        const subscriptionDetails = await getSubscription(subscriptionId);
-        console.log(subscriptionDetails.sender);
+  // test("getSubscription can work", async () => {
+  //   // Act and Assert
+  //   try {
+  //     if (subscriptionData && subscriptionData.subscriptionLists.length > 0) {
+  //       const firstSubscription = subscriptionData.subscriptionLists[0];
+  //       const subscriptionId = BigInt(firstSubscription.id);
+  //       const subscriptionDetails = await getSubscription(subscriptionId);
+  //       console.log(subscriptionDetails.sender);
 
-        // Assert that subscriptionDetails is defined
-        expect(subscriptionDetails).toBeDefined();
+  //       // Assert that subscriptionDetails is defined
+  //       expect(subscriptionDetails).toBeDefined();
 
-        // Check if the retrieved subscription details have the expected properties
-        expect(subscriptionDetails.sender).toBeDefined();
-        expect(subscriptionDetails.recipient).toBeDefined();
-        expect(subscriptionDetails.deposit).toBeDefined();
-        expect(subscriptionDetails.tokenAddress).toBeDefined();
-        expect(subscriptionDetails.startTime).toBeDefined();
-        expect(subscriptionDetails.stopTime).toBeDefined();
-        expect(subscriptionDetails.interval).toBeDefined();
-        expect(subscriptionDetails.remainingBalance).toBeDefined();
-        expect(subscriptionDetails.lastWithdrawTime).toBeDefined();
-        expect(subscriptionDetails.withdrawCount).toBeDefined();
-      }
-    } catch (error) {
-      // Assert for failure
-      expect(error).toBeNull(); // Assert that no error was thrown
-    }
-  });
+  //       // Check if the retrieved subscription details have the expected properties
+  //       expect(subscriptionDetails.sender).toBeDefined();
+  //       expect(subscriptionDetails.recipient).toBeDefined();
+  //       expect(subscriptionDetails.deposit).toBeDefined();
+  //       expect(subscriptionDetails.tokenAddress).toBeDefined();
+  //       expect(subscriptionDetails.startTime).toBeDefined();
+  //       expect(subscriptionDetails.stopTime).toBeDefined();
+  //       expect(subscriptionDetails.interval).toBeDefined();
+  //       expect(subscriptionDetails.remainingBalance).toBeDefined();
+  //       expect(subscriptionDetails.lastWithdrawTime).toBeDefined();
+  //       expect(subscriptionDetails.withdrawCount).toBeDefined();
+  //     }
+  //   } catch (error) {
+  //     // Assert for failure
+  //     expect(error).toBeNull(); // Assert that no error was thrown
+  //   }
+  // });
 
   test("withdrawFromRecipient can work", async () => {
     const amount: BigInt = BigInt(1);

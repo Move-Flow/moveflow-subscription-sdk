@@ -16,8 +16,7 @@ import { initializeProvider } from "./utils/chain";
 // Ethereum provider URL and contract information
 
 const contractAddress = "0xEAB439707cA5F8e4e47c697629E77aE26842cbba";
-const privateKey =
-  "753e10bc305827ad956b98c178ed80b0c98900d40a6ecec3e05fe373ad9f85a3";
+const privateKey = "Your private key";
 const chain = Chain.Sepolia; // Set the chain here (e.g., Sepolia, Goerli)
 const provider = initializeProvider(chain); // Initialize the provider
 const wallet = new ethers.Wallet(privateKey, provider);
@@ -161,34 +160,34 @@ const depositeFromSender = async (
   }
 };
 
-// Retrieve subscription details
-const getSubscription = async (
-  subscriptionId: BigInt
-): Promise<GetSubscriptionOutput> => {
-  try {
-    // Check if subscriptionId is a positive integer
-    if (!subscriptionId || subscriptionId.toString() <= BigInt(0).toString()) {
-      throw new Error(
-        "Invalid subscription ID. Please provide a valid positive integer."
-      );
-    }
+// // Retrieve subscription details
+// const getSubscription = async (
+//   subscriptionId: BigInt
+// ): Promise<GetSubscriptionOutput> => {
+//   try {
+//     // Check if subscriptionId is a positive integer
+//     if (!subscriptionId || subscriptionId.toString() <= BigInt(0).toString()) {
+//       throw new Error(
+//         "Invalid subscription ID. Please provide a valid positive integer."
+//       );
+//     }
 
-    const subscriptionDetails = await contract.getSubscription(subscriptionId);
-    console.log(subscriptionDetails);
+//     const subscriptionDetails = await contract.getSubscription(subscriptionId);
+//     console.log(subscriptionDetails);
 
-    // Check if the retrieved subscription details are valid
-    if (!subscriptionDetails || !subscriptionDetails.id) {
-      throw new Error("Failed to retrieve valid subscription details.");
-    }
+//     // Check if the retrieved subscription details are valid
+//     if (!subscriptionDetails || !subscriptionDetails.id) {
+//       throw new Error("Failed to retrieve valid subscription details.");
+//     }
 
-    return subscriptionDetails;
-  } catch (error) {
-    console.error("Error in getSubscription:", error);
-    throw new Error(
-      "Failed to get subscription details. Please try again later."
-    );
-  }
-};
+//     return subscriptionDetails;
+//   } catch (error) {
+//     console.error("Error in getSubscription:", error);
+//     throw new Error(
+//       "Failed to get subscription details. Please try again later."
+//     );
+//   }
+// };
 
 /**
  * List subscriptions created by a specific sender.
