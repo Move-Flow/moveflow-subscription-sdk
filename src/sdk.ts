@@ -18,12 +18,26 @@ import { initializeProvider } from "./utils/chain";
 const contractAddress = "0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099";
 const privateKey =
   "753e10bc305827ad956b98c178ed80b0c98900d40a6ecec3e05fe373ad9f85a3";
-const chain = Chain.Sepolia; // Set the chain here (e.g., Sepolia, Goerli)
+const chain = Chain.Goerli; // Set the chain here (e.g., Sepolia, Goerli)
 const provider = initializeProvider(chain); // Initialize the provider
 const wallet = new ethers.Wallet(privateKey, provider);
 const contract = new ethers.Contract(contractAddress, SubscriptionABI, wallet);
 
 // Create a subscription with validation checks
+/**
+ * Create a subscription with validation checks.
+ *
+ * @param {CreateSubscriptionInput} input - The input data for creating the subscription.
+ * @param {string} input.recipient - The recipient's address for the subscription.
+ * @param {number} input.deposit - The deposit amount for the subscription.
+ * @param {string} input.tokenAddress - The address of the token for the subscription.
+ * @param {number} input.startTime - The start time of the subscription.
+ * @param {number} input.stopTime - The stop time of the subscription.
+ * @param {number} input.interval - The interval for the subscription.
+ * @param {string} input.fixedRate - The fixed rate for the subscription.
+ * @throws {Error} Throws an error if validation checks fail or the subscription creation fails.
+ */
+
 const createSubscription = async (
   input: CreateSubscriptionInput
 ): Promise<void> => {
@@ -91,7 +105,15 @@ const createSubscription = async (
   }
 };
 
-// Deposit funds from the sender
+/**
+ * Deposit funds from the sender to a subscription.
+ *
+ * @param {DepositFromSenderInput} input - The input data for depositing funds.
+ * @param {number} input.subscriptionId - The ID of the subscription to deposit to.
+ * @param {number} input.amount - The amount to deposit to the subscription.
+ * @throws {Error} Throws an error if validation checks fail or the deposit operation fails.
+ * @returns {Promise<boolean>} Returns `true` if the deposit was successful.
+ */
 const depositeFromSender = async (
   input: DepositFromSenderInput
 ): Promise<boolean> => {
@@ -168,7 +190,14 @@ const getSubscription = async (
   }
 };
 
-// List created subscriptions
+/**
+ * List subscriptions created by a specific sender.
+ *
+ * @param {Client} client - The GraphQL client used for making queries.
+ * @param {string} sender - The sender's address for which to list subscriptions.
+ * @returns {Promise<GetSubscriptionsResponse>} Returns subscription data if successful.
+ * @throws {Error} Throws an error if the query fails or no subscriptions are found.
+ */
 const listSubscriptions = async (
   client: Client,
   sender: string
@@ -189,7 +218,6 @@ const listSubscriptions = async (
       Array.isArray(subscriptionData.subscriptionLists) &&
       subscriptionData.subscriptionLists.length > 0
     ) {
-      //wallet address
       console.log("subscription data fetched successfully", subscriptionData);
       return subscriptionData;
     } else {
@@ -202,7 +230,15 @@ const listSubscriptions = async (
   }
 };
 
-// Withdraw funds from the recipient
+/**
+  // Withdraw funds from the recipient
+ * @notice Initiates a withdrawal of funds from the recipient's side of the subscription.
+ * @dev Ensures the subscription ID and withdrawal amount are valid and positive.
+ * @param subscriptionId The id of the subscription to withdraw tokens from.
+ * @param amount The amount of tokens to withdraw.
+ * @returns A boolean indicating whether the withdrawal was successfully initiated.
+ * @throws An error if the subscription ID or withdrawal amount is invalid, or if the withdrawal fails.
+ */
 const withdrawFromRecipient = async (
   input: WithdrawFromRecipientInput
 ): Promise<boolean> => {
@@ -221,10 +257,6 @@ const withdrawFromRecipient = async (
         "Invalid withdrawal amount. Please provide a valid positive number."
       );
     }
-
-    // // Fetch subscription details to perform additional checks if needed
-    // const subscriptionDetails = await getSubscription(subscriptionId);
-    // Add additional checks based on subscription details if necessary
 
     // Perform the withdrawal logic if all checks pass
     await contract.withdrawFromRecipient(subscriptionId, amount);

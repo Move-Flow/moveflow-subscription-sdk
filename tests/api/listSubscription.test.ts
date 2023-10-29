@@ -36,6 +36,8 @@ describe("listSubscriptions", () => {
         // Assert that all properties are defined
         expect(subscription.id).toBeDefined();
         expect(subscription.fixedRate).toBeDefined();
+        expect(subscription.recipient).toBeDefined();
+        expect(subscription.sender).toBeDefined();
         expect(subscription.interval).toBeDefined();
         expect(subscription.lastWithdrawTime).toBeDefined();
         expect(subscription.remainingBalance).toBeDefined();
