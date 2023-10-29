@@ -18,7 +18,7 @@ import { initializeProvider } from "./utils/chain";
 const contractAddress = "0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099";
 const privateKey =
   "753e10bc305827ad956b98c178ed80b0c98900d40a6ecec3e05fe373ad9f85a3";
-const chain = Chain.Goerli; // Set the chain here (e.g., Sepolia, Goerli)
+const chain = Chain.Sepolia; // Set the chain here (e.g., Sepolia, Goerli)
 const provider = initializeProvider(chain); // Initialize the provider
 const wallet = new ethers.Wallet(privateKey, provider);
 const contract = new ethers.Contract(contractAddress, SubscriptionABI, wallet);
