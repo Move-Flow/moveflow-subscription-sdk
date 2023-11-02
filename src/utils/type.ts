@@ -1,4 +1,4 @@
-// Interface for Smart Contract Input Types
+// Input Types
 export interface CreateSubscriptionInput {
   recipient: string;
   deposit: BigInt;
@@ -7,6 +7,11 @@ export interface CreateSubscriptionInput {
   stopTime: BigInt;
   interval: BigInt;
   fixedRate: BigInt;
+}
+
+export interface DepositFromSenderInput {
+  subscriptionId: BigInt;
+  amount: BigInt;
 }
 
 export interface MoveflowConfig {
@@ -20,21 +25,16 @@ export enum Chain {
   Sepolia = "sepolia",
 }
 
-export interface DepositFromSenderInput {
-  subscriptionId: BigInt;
-  amount: BigInt;
-}
-
 export interface WithdrawFromRecipientInput {
   subscriptionId: BigInt;
   amount: BigInt;
 }
+
 export interface GetSubscriptionInput {
   subscriptionId: BigInt;
 }
 
-
-// Interface for Smart Contract Output Types
+// Output Types
 export interface CreateSubscriptionOutput {
   // Adjust based on the actual output
 }
@@ -53,7 +53,26 @@ export interface GetSubscriptionOutput {
   fixedRate: BigInt;
 }
 
-// Interface for Smart Contract Events
+export interface GetOverallDataResponse {
+  senderData: SenderData;
+}
+
+export interface SenderData {
+  id: string;
+  deposit: BigInt;
+  withdrawnToRecipient: BigInt;
+}
+
+export interface GetDepositLogsResponse {
+  depositLogs: DepositLog[];
+}
+
+export interface DepositLog {
+  depositeTime: BigInt;
+  depositeAmount: BigInt;
+}
+
+// Event Types
 export interface CreateSubscriptionEvent extends Event {
   subscriptionId: BigInt;
   sender: string;
@@ -76,7 +95,6 @@ export interface RecipientWithdrawLog {
   id: string;
   withdrawAmount: BigInt;
   withdrawTime: BigInt;
-  withdrawnCount: BigInt;
 }
 
 export interface SenderDepositeLog {
@@ -85,22 +103,132 @@ export interface SenderDepositeLog {
   depositeTime: BigInt;
 }
 
-export interface SenderWithdrawLog {
+interface SenderWithdrawLog {
   id: string;
   withdrawAmount: BigInt;
   withdrawTime: BigInt;
 }
 
-export interface Recipient {
-  id: string;
-  withdrawnBalance: BigInt;
-}
-
+// depositeFromSender log
 export interface Sender {
   id: string;
-  deposit: BigInt;
-  withdrawnToRecipient: BigInt;
 }
+
+export interface SenderDepositeLog {
+  depositTime: number;
+  depositAmount: number;
+}
+
+export interface GetDepositeFromSenderLogData {
+  subscriptionList: SubscriptionListDepo;
+}
+
+export interface SubscriptionListDepo {
+  sender: Sender;
+  senderDepositLog: SenderDepositeLog;
+}
+
+// withdrawFromRecipient log types
+
+interface RecipientLog {
+  id: string;
+}
+
+interface WithdrawLog {
+  withdrawAmount: BigInt;
+  withdrawTime: BigInt;
+}
+
+export interface SubscriptionLogListRecipient {
+  recipient: RecipientLog;
+  senderWithdrawLog: WithdrawLog;
+}
+
+export interface GetWithdrwaFromRecipientLogData {
+  subscriptionList: SubscriptionLogListRecipient;
+}
+
+export interface SenderWithdrawLogResponse {
+  subscriptionList: {
+    senderWithdrawLog: SenderWithdrawLog[];
+  };
+}
+
+// overall by a Sender types
+export interface SenderInfo {
+  id: string;
+  deposit: number;
+  withdrawnToRecipient: number;
+}
+
+export interface GetSenderInfoData {
+  sender: SenderInfo;
+}
+// overall by a recipient types
+export interface RecipientInfo {
+  id: string;
+  withdrawnBalance: number;
+}
+
+export interface GetRecipientInfoData {
+  recipient: RecipientInfo;
+}
+
+export interface SenderDepositeLogAll {
+  depositTime: number;
+  depositAmount: number;
+}
+
+export interface GetSenderDepositeLogAllData {
+  sender: {
+    id: string;
+    senderDepositeLog: SenderDepositeLogAll[];
+  };
+}
+
+
+export interface RecipientWithdrawLog {
+  withdrawTimeRecipient: number;
+  withdrawAmountsRecipient: number;
+}
+
+
+export interface SenderSubscription {
+  id: string;
+  sender: {
+    id: string;
+  };
+  recipient: {
+    id: string;
+  };
+  tokenAddress: string;
+  deposit: number;
+  remainingBalance: number;
+  startTime: number;
+  stopTime: number;
+  interval: string;
+  fixedRate: string;
+  lastWithdrawTime: number;
+  isEntity: boolean;
+  withdrawableCount: number;
+  withdrawnBalance: number;
+  withdrawnCount: number;
+}
+
+export interface GetSenderSubscriptionsData {
+  sender: {
+    subscriptions: SenderSubscription[];
+  }
+}
+export interface GetRecipientWithdrawLogData {
+  recipient: {
+    id: string;
+    recipientWithdrawLog: RecipientWithdrawLog[];
+  };
+}
+
+
+
 
 export interface SubscriptionInfo {
   id: string;
@@ -114,7 +242,7 @@ export interface SubscriptionInfo {
   withdrawableCount: BigInt;
   withdrawnCount: BigInt;
   lastWithdrawTime: BigInt;
-  recipient: Recipient;
+  recipient: RecipientInfo;
   sender: Sender;
   tokenAddress: string;
   isEntity: boolean;
@@ -123,6 +251,18 @@ export interface SubscriptionInfo {
   senderWithdrawLog: SenderWithdrawLog[];
 }
 
-export interface GetSubscriptionsResponse {
+export interface GetSubscriptionsSenderResponse {
   subscriptionLists: SubscriptionInfo[];
+}
+
+export interface GetSubscriptionsByRecipientResponse {
+  subscriptionLists: SubscriptionInfo[];
+}
+
+export interface GetRecipientSubscriptionsParams {
+  recipientId: string;
+  first: number;
+  skip: number;
+  orderBy: string;
+  orderDirection: string;
 }

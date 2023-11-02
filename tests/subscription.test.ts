@@ -3,10 +3,9 @@ import {
   Chain,
   createSubscription,
   depositeFromSender,
-  getSubscription,
   withdrawFromRecipient,
 } from "../src";
-import { subscriptionData } from "./api/listSubscription.test";
+import { senderSubscriptionData } from "./api/listSubscription.test";
 import { initializeProvider } from "../src/utils/chain";
 describe("SubscriptionTest", () => {
   let provider: any;
@@ -75,8 +74,11 @@ describe("SubscriptionTest", () => {
 
   test("depositFromSender can work", async () => {
     try {
-      if (subscriptionData && subscriptionData.subscriptionLists.length > 0) {
-        const firstSubscription = subscriptionData.subscriptionLists[0];
+      if (
+        senderSubscriptionData &&
+        senderSubscriptionData.subscriptionLists.length > 0
+      ) {
+        const firstSubscription = senderSubscriptionData.subscriptionLists[0];
         const subscriptionId = BigInt(firstSubscription.id);
         console.log(subscriptionId);
 
@@ -92,7 +94,7 @@ describe("SubscriptionTest", () => {
         }
 
         const input = {
-          amount: BigInt(1),
+          amount: BigInt(2),
         };
 
         // Fetch user balance
@@ -134,8 +136,8 @@ describe("SubscriptionTest", () => {
   // test("getSubscription can work", async () => {
   //   // Act and Assert
   //   try {
-  //     if (subscriptionData && subscriptionData.subscriptionLists.length > 0) {
-  //       const firstSubscription = subscriptionData.subscriptionLists[0];
+  //     if (senderSubscriptionData && senderSubscriptionData.subscriptionLists.length > 0) {
+  //       const firstSubscription = senderSubscriptionData.subscriptionLists[0];
   //       const subscriptionId = BigInt(firstSubscription.id);
   //       const subscriptionDetails = await getSubscription(subscriptionId);
   //       console.log(subscriptionDetails.sender);
@@ -166,8 +168,11 @@ describe("SubscriptionTest", () => {
 
     // Act and Assert
     try {
-      if (subscriptionData && subscriptionData.subscriptionLists.length > 0) {
-        for (const subscription of subscriptionData.subscriptionLists) {
+      if (
+        senderSubscriptionData &&
+        senderSubscriptionData.subscriptionLists.length > 0
+      ) {
+        for (const subscription of senderSubscriptionData.subscriptionLists) {
           const subscriptionId = BigInt(subscription.id);
 
           // Validation Checks

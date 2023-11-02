@@ -19,3 +19,4 @@ export function initializeProvider(chain: Chain): JsonRpcProvider {
   //
   https: return new ethers.JsonRpcProvider(infuraUrl);
 }
+// variables

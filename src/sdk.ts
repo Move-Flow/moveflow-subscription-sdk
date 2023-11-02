@@ -5,18 +5,16 @@ import {
   CreateSubscriptionInput,
   DepositFromSenderInput,
   WithdrawFromRecipientInput,
-  GetSubscriptionOutput,
-  GetSubscriptionsResponse,
   Chain,
 } from "./utils/type";
-import { Client } from "urql";
-import { GET_SUBSCRIPTIONS } from "./utils/api/queries";
+
 import { initializeProvider } from "./utils/chain";
 
 // Ethereum provider URL and contract information
 
 const contractAddress = "0xEAB439707cA5F8e4e47c697629E77aE26842cbba";
-const privateKey = "Your private key";
+const privateKey =
+  "753e10bc305827ad956b98c178ed80b0c98900d40a6ecec3e05fe373ad9f85a3";
 const chain = Chain.Sepolia; // Set the chain here (e.g., Sepolia, Goerli)
 const provider = initializeProvider(chain); // Initialize the provider
 const wallet = new ethers.Wallet(privateKey, provider);
@@ -160,75 +158,6 @@ const depositeFromSender = async (
   }
 };
 
-// // Retrieve subscription details
-// const getSubscription = async (
-//   subscriptionId: BigInt
-// ): Promise<GetSubscriptionOutput> => {
-//   try {
-//     // Check if subscriptionId is a positive integer
-//     if (!subscriptionId || subscriptionId.toString() <= BigInt(0).toString()) {
-//       throw new Error(
-//         "Invalid subscription ID. Please provide a valid positive integer."
-//       );
-//     }
-
-//     const subscriptionDetails = await contract.getSubscription(subscriptionId);
-//     console.log(subscriptionDetails);
-
-//     // Check if the retrieved subscription details are valid
-//     if (!subscriptionDetails || !subscriptionDetails.id) {
-//       throw new Error("Failed to retrieve valid subscription details.");
-//     }
-
-//     return subscriptionDetails;
-//   } catch (error) {
-//     console.error("Error in getSubscription:", error);
-//     throw new Error(
-//       "Failed to get subscription details. Please try again later."
-//     );
-//   }
-// };
-
-/**
- * List subscriptions created by a specific sender.
- *
- * @param {Client} client - The GraphQL client used for making queries.
- * @param {string} sender - The sender's address for which to list subscriptions.
- * @returns {Promise<GetSubscriptionsResponse>} Returns subscription data if successful.
- * @throws {Error} Throws an error if the query fails or no subscriptions are found.
- */
-const listSubscriptions = async (
-  client: Client,
-  sender: string
-): Promise<GetSubscriptionsResponse> => {
-  try {
-    const senderLowerCase = sender.toLowerCase();
-    const response = await client
-      .query(GET_SUBSCRIPTIONS, { sender: senderLowerCase })
-      .toPromise();
-    if (response.error) {
-      console.error("Error fetching subscriptions:", response.error);
-      throw new Error("Failed to fetch subscriptions.");
-    }
-    const subscriptionData = response.data as GetSubscriptionsResponse;
-
-    if (
-      subscriptionData &&
-      Array.isArray(subscriptionData.subscriptionLists) &&
-      subscriptionData.subscriptionLists.length > 0
-    ) {
-      console.log("subscription data fetched successfully", subscriptionData);
-      return subscriptionData;
-    } else {
-      console.error("No subscription data found.");
-      throw new Error("No subscription data found.");
-    }
-  } catch (error) {
-    console.error("Error fetching subscriptions:", error);
-    throw new Error("Failed to fetch subscriptions.");
-  }
-};
-
 /**
   // Withdraw funds from the recipient
  * @notice Initiates a withdrawal of funds from the recipient's side of the subscription.
@@ -258,7 +187,7 @@ const withdrawFromRecipient = async (
     }
 
     // Perform the withdrawal logic if all checks pass
-    await contract.withdrawFromRecipient(subscriptionId, amount);
+    await contract.withdrawFromRecipient(subscriptionId, amount, {});
 
     // Return true if the withdrawal was initiated successfully
     return true;
@@ -270,10 +199,4 @@ const withdrawFromRecipient = async (
   }
 };
 
-export {
-  createSubscription,
-  getSubscription,
-  depositeFromSender,
-  withdrawFromRecipient,
-  listSubscriptions,
-};
+export { createSubscription, depositeFromSender, withdrawFromRecipient };
