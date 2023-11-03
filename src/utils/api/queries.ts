@@ -128,12 +128,20 @@ const listRecipientSubscriptions = async (
  */
 const getWithdrawFromRecipientLog = async (
   client: Client,
-  subscriptionId: string
+  subscriptionId: string,
+  first: number,
+  skip: number,
+  orderBy: string,
+  orderDirection: string
 ): Promise<GetWithdrwaFromRecipientLogData> => {
   try {
     const response = await client
       .query(GET_WITHDRAW_From_RECIPIENT_LOG, {
         id: subscriptionId,
+        first,
+        skip,
+        orderBy,
+        orderDirection,
       })
       .toPromise();
 
@@ -143,7 +151,7 @@ const getWithdrawFromRecipientLog = async (
     }
 
     const data = response.data as GetWithdrwaFromRecipientLogData;
-    console.log(data);
+    console.log("getWithdrawFromRecipientLog", data);
 
     if (data && data.subscriptionList) {
       return data;
@@ -158,21 +166,35 @@ const getWithdrawFromRecipientLog = async (
 };
 
 /**
- * Get sender deposit data from a specific subscription log.
+ * Get sender deposit data from a specific subscription log with pagination.
  *
  * @param {Client} client - The GraphQL client used for making queries.
  * @param {string} subscriptionId - The ID of the subscription for which to fetch sender deposit data.
+ * @param {number} first - The number of records to fetch.
+ * @param {number} skip - The number of records to skip.
+ * @param {string} orderBy - The field to order results by.
+ * @param {string} orderDirection - The order direction (asc or desc).
  * @returns {Promise<GetDepositeFromSenderLogData>} Returns sender deposit data if successful.
  * @throws {Error} Throws an error if the query fails, no data is found, or if there's an error response.
  */
+
 const getSenderDepositLog = async (
   client: Client,
-  subscriptionId: string
+  subscriptionId: string,
+  first: number,
+  skip: number,
+
+  orderBy: string,
+  orderDirection: string
 ): Promise<GetDepositeFromSenderLogData> => {
   try {
     const response = await client
       .query(GET_SENDER_DEPOSIT_LOG, {
         id: subscriptionId,
+        first,
+        skip,
+        orderBy,
+        orderDirection,
       })
       .toPromise();
 
@@ -182,6 +204,7 @@ const getSenderDepositLog = async (
     }
 
     const data = response.data as GetDepositeFromSenderLogData;
+    console.log("GetDepositeFromSenderLogs", data);
 
     if (data && data.subscriptionList) {
       return data;

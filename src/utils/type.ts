@@ -97,12 +97,6 @@ export interface RecipientWithdrawLog {
   withdrawTime: BigInt;
 }
 
-export interface SenderDepositeLog {
-  id: string;
-  depositeAmount: BigInt;
-  depositeTime: BigInt;
-}
-
 interface SenderWithdrawLog {
   id: string;
   withdrawAmount: BigInt;
@@ -115,8 +109,8 @@ export interface Sender {
 }
 
 export interface SenderDepositeLog {
-  depositTime: number;
-  depositAmount: number;
+  depositeTime: number;
+  depositeAmount: number;
 }
 
 export interface GetDepositeFromSenderLogData {
@@ -125,7 +119,7 @@ export interface GetDepositeFromSenderLogData {
 
 export interface SubscriptionListDepo {
   sender: Sender;
-  senderDepositLog: SenderDepositeLog;
+  senderDepositeLog: SenderDepositeLog;
 }
 
 // withdrawFromRecipient log types
@@ -186,12 +180,10 @@ export interface GetSenderDepositeLogAllData {
   };
 }
 
-
 export interface RecipientWithdrawLog {
   withdrawTimeRecipient: number;
   withdrawAmountsRecipient: number;
 }
-
 
 export interface SenderSubscription {
   id: string;
@@ -218,7 +210,7 @@ export interface SenderSubscription {
 export interface GetSenderSubscriptionsData {
   sender: {
     subscriptions: SenderSubscription[];
-  }
+  };
 }
 export interface GetRecipientWithdrawLogData {
   recipient: {
@@ -226,9 +218,6 @@ export interface GetRecipientWithdrawLogData {
     recipientWithdrawLog: RecipientWithdrawLog[];
   };
 }
-
-
-
 
 export interface SubscriptionInfo {
   id: string;

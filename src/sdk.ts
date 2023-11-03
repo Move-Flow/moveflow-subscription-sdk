@@ -13,8 +13,7 @@ import { initializeProvider } from "./utils/chain";
 // Ethereum provider URL and contract information
 
 const contractAddress = "0xEAB439707cA5F8e4e47c697629E77aE26842cbba";
-const privateKey =
-  "753e10bc305827ad956b98c178ed80b0c98900d40a6ecec3e05fe373ad9f85a3";
+const privateKey = "Your private key";
 const chain = Chain.Sepolia; // Set the chain here (e.g., Sepolia, Goerli)
 const provider = initializeProvider(chain); // Initialize the provider
 const wallet = new ethers.Wallet(privateKey, provider);
@@ -187,7 +186,7 @@ const withdrawFromRecipient = async (
     }
 
     // Perform the withdrawal logic if all checks pass
-    await contract.withdrawFromRecipient(subscriptionId, amount, {});
+    await contract.withdrawFromRecipient(subscriptionId, amount);
 
     // Return true if the withdrawal was initiated successfully
     return true;

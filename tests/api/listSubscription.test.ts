@@ -11,10 +11,10 @@ import {
   getSenderSubscriptions,
 } from "../../src/utils/api/queries";
 import {
-  GetDepositeFromSenderLogData,
+  // GetDepositeFromSenderLogData,
   GetSubscriptionsByRecipientResponse,
   GetSubscriptionsSenderResponse,
-  GetWithdrwaFromRecipientLogData,
+  // GetWithdrwaFromRecipientLogData,
   GetSenderInfoData,
   GetRecipientInfoData,
 } from "../../src/utils/type";
@@ -115,17 +115,21 @@ describe("listRecipientSubscriptions", () => {
 });
 
 describe("getSenderDepositLog", () => {
-  test("fetch sender deposit logs", async () => {
+  test("fetch sender deposit logs with pagination", async () => {
     try {
-      const response: GetDepositeFromSenderLogData = await getSenderDepositLog(
+      const response = await getSenderDepositLog(
         mockClient,
-        "0x7a126"
+        "0x7a126",
+        10,
+        0,
+        "depositeTime",
+        "asc"
       );
 
       expect(response).toBeDefined();
       expect(response.subscriptionList).toBeDefined();
-      const senderDepositLogs = response.subscriptionList;
-      console.log(senderDepositLogs);
+      const subscriptionList = response.subscriptionList.senderDepositeLog;
+      console.log(subscriptionList);
 
       // Add more specific checks on the deposit logs if needed
     } catch (error) {
@@ -135,25 +139,30 @@ describe("getSenderDepositLog", () => {
   });
 });
 
-describe("getRecipientLogs", () => {
-  test("fetch withdraw from recipient logs", async () => {
+describe("getWithdrawFromRecipientLog", () => {
+  test("fetch sender withdrawal logs with pagination", async () => {
     try {
-      const response: GetWithdrwaFromRecipientLogData =
-        await getWithdrawFromRecipientLog(mockClient, "0x7a126");
+      const response = await getWithdrawFromRecipientLog(
+        mockClient,
+        "0x7a126",
+        10,
+        0,
+        "withdrawTime",
+        "asc"
+      );
 
       expect(response).toBeDefined();
       expect(response.subscriptionList).toBeDefined();
-      const recipientLogs = response.subscriptionList;
-      console.log("recipient logs:", recipientLogs);
+      const subscriptionList = response.subscriptionList?.senderWithdrawLog;
+      console.log(subscriptionList);
 
-      // Add more specific checks on the deposit logs if needed
+      // Add more specific checks on the withdrawal logs if needed
     } catch (error) {
       console.error("Error in the test:", error);
       throw error; // Rethrow the error to fail the test
     }
   });
 });
-
 describe("getSenderInfo", () => {
   test("fetch sender info", async () => {
     try {
