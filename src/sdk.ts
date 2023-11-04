@@ -15,7 +15,8 @@ import { initializeProvider } from "./utils/chain";
 // Ethereum provider URL and contract information
 
 const contractAddress = "0xEAB439707cA5F8e4e47c697629E77aE26842cbba";
-const privateKey ="Your private Key";
+const privateKey =
+  "";
 const chain = Chain.Goerli; // Set the chain here (e.g., Sepolia, Goerli)
 const provider = initializeProvider(chain); // Initialize the provider
 const wallet = new ethers.Wallet(privateKey, provider);

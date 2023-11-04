@@ -32,7 +32,7 @@ describe("SubscriptionTest", () => {
       // Replace these values with actual test data
       const tokenContractAddress = coinAddressStore.coinAddress;
       const smartContractAddress = "0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099";
-      const amountToApprove = "2";
+      const amountToApprove = "3";
 
       // Call the approveTokensForContract function
       await approveTokensForContract(
@@ -124,7 +124,7 @@ describe("SubscriptionTest", () => {
         }
 
         const input = {
-          amount: BigInt(0),
+          amount: BigInt(1),
         };
 
         // Fetch user balance

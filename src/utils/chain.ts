@@ -11,8 +11,7 @@ export function initializeProvider(chain: Chain): JsonRpcProvider {
       infuraUrl = `https://sepolia.infura.io/v3/${infuraID}`;
       break;
     case Chain.Goerli:
-      infuraUrl =
-        "https://eth-goerli.alchemyapi.io/v2/HYE2oyBJlSlpZCY-dUI8ndfq0NCpWwvT";
+      infuraUrl = `https://goerli.infura.io/v3/${infuraID}`;
       break;
     default:
       throw new Error("Unsupported network");
