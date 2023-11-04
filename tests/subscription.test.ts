@@ -2,15 +2,19 @@ import { ethers } from "ethers";
 import {
   Chain,
   approveTokensForContract,
+  cancelSubscription,
   createSubscription,
   depositeFromSender,
+  // listSenderSubscriptions,
   withdrawFromRecipient,
 } from "../src";
 import { senderSubscriptionData } from "./api/listSubscription.test";
 import { initializeProvider } from "../src/utils/chain";
 import coinAddressStore from "../src/utils/coinAddress";
+// import client from "../src/utils/api/client-config";
 
-const privateKey = "";
+const privateKey =
+  "";
 const chain = Chain.Goerli; // Set the chain here (e.g., Sepolia, Goerli)
 const provider = initializeProvider(chain); // Initialize the provider
 const wallet = new ethers.Wallet(privateKey, provider);
@@ -211,5 +215,21 @@ describe("SubscriptionTest", () => {
       // Assert for failure
       expect(error).toBeNull(); // Assert that no error was thrown
     }
-  }, 60000);
+  }, 50000);
+});
+
+test("cancelSpecificSubscription can work", async () => {
+  // Replace 'specificSubscriptionId' with the correct ID of the subscription you want to cancel.
+  const specificSubscriptionId = "0x7a121";
+
+  try {
+    // Call the cancelSubscription function with the specific subscription ID.
+    const result = await cancelSubscription(BigInt(specificSubscriptionId));
+
+    // Assert the result if needed (e.g., check if the cancellation was successful).
+    expect(result).toBeDefined();
+  } catch (error) {
+    // Handle errors or assert for failure as needed.
+    expect(error).toBeNull();
+  }
 });

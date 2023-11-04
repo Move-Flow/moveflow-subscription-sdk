@@ -5,7 +5,7 @@
   "main": "./dist/tsc/index.js",
   "types": "./dist/tsc/index.d.ts",
   "scripts": {
-    "start": "nodemon --exec ts-node src/utils/approve.ts",
+    "start": "nodemon --exec ts-node src/approve.ts",
     "test": "jest",
     "coverage": "jest --coverage",
     "build": "tsc -p tsconfig.json",

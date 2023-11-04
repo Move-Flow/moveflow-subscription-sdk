@@ -3,6 +3,7 @@ require("dotenv").config();
 import SubscriptionABI from "./lib/contractABIs/subsrciptionABI.json";
 import ApproveABI from "./lib/contractABIs/approveABI.json";
 import coinAddressStore from "./utils/coinAddress";
+import { listSenderSubscriptions } from "./utils/api/queries";
 import {
   CreateSubscriptionInput,
   DepositFromSenderInput,
@@ -11,19 +12,19 @@ import {
 } from "./utils/type";
 
 import { initializeProvider } from "./utils/chain";
+import client from "./utils/api/client-config";
 
 // Ethereum provider URL and contract information
 
 const contractAddress = "0xEAB439707cA5F8e4e47c697629E77aE26842cbba";
-const privateKey =
-  "";
+const privateKey = "";
 const chain = Chain.Goerli; // Set the chain here (e.g., Sepolia, Goerli)
 const provider = initializeProvider(chain); // Initialize the provider
 const wallet = new ethers.Wallet(privateKey, provider);
 
 const tokenContractAddress = coinAddressStore.coinAddress;
 
-const amountToApprove = "2";
+const amountToApprove = "7";
 const smartContractAddress = "0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099";
 const contract = new ethers.Contract(
   smartContractAddress,
@@ -52,7 +53,8 @@ export async function approveTokensForContract(
     // Approve the smart contract to spend tokens on your behalf
     const approvalTx = await tokenContract.approve(
       smartContractAddress,
-      amountToApprove
+      amountToApprove,
+      { gasLimit: 200000 }
     );
 
     // Wait for the approval transaction to be mined
@@ -260,4 +262,72 @@ const withdrawFromRecipient = async (
   }
 };
 
-export { createSubscription, depositeFromSender, withdrawFromRecipient };
+const cancelSubscription = async (subscriptionId: BigInt) => {
+  try {
+    // Fetch the subscription details using the listSenderSubscriptions function
+    const sender = "0x3f4ce45464915a5dfd1ed7e1175877d498dd2606";
+    const subscriptions = await listSenderSubscriptions(
+      client,
+      sender,
+      10,
+      "startTime",
+      0,
+      "asc"
+    );
+
+    // Find the subscription with the given subscriptionId
+    const subscription = subscriptions.subscriptionLists.find(
+      (sub) => BigInt(sub.id).toString() === subscriptionId.toString()
+    );
+
+    // Check if the subscription is found and if it's allowed to be canceled
+    if (subscription) {
+      const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+      const subscriptionStartTime = BigInt(subscription.startTime.toString()); // Subscription start time in seconds
+      const subscriptionInterval = BigInt(subscription.interval.toString()); // Subscription interval in seconds
+      const withdrawCount = BigInt(subscription.withdrawnCount.toString());
+
+      if (
+        (BigInt(currentTime) - BigInt(subscriptionStartTime.toString())) /
+          BigInt(subscriptionInterval.toString()) !==
+        BigInt(withdrawCount.toString())
+      ) {
+        // Continue with the cancellation logic
+        const result = await contract.cancelSubscription(subscriptionId, {
+          gasPrice: ethers.parseUnits("10", "gwei"), // Adjust the gas price as needed
+          gasLimit: 100000, // You can also adjust the gas limit if necessary
+        });
+
+        console.log(result);
+        // Check if the cancellation was successful
+        if (result) {
+          console.log(
+            `Subscription with ID ${subscriptionId} has been canceled.`
+          );
+        } else {
+          console.error(
+            `Failed to cancel subscription with ID ${subscriptionId}.`
+          );
+        }
+      } else {
+        console.error("Subscription not allowed to cancel.");
+        throw new Error("Subscription not allowed to cancel.");
+      }
+    } else {
+      console.error(`Subscription with ID ${subscriptionId} not found.`);
+      throw new Error(`Subscription with ID ${subscriptionId} not found.`);
+    }
+  } catch (error) {
+    console.error("Error in cancelSubscription:", error);
+    throw new Error(
+      "Failed to cancel the subscription. Please check the input and try again."
+    );
+  }
+};
+
+export {
+  createSubscription,
+  depositeFromSender,
+  withdrawFromRecipient,
+  cancelSubscription,
+};
