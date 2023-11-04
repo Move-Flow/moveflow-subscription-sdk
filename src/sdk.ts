@@ -265,7 +265,7 @@ const withdrawFromRecipient = async (
 const cancelSubscription = async (subscriptionId: BigInt) => {
   try {
     // Fetch the subscription details using the listSenderSubscriptions function
-    const sender = "0x3f4ce45464915a5dfd1ed7e1175877d498dd2606";
+    const sender = wallet.address.toLocaleLowerCase();
     const subscriptions = await listSenderSubscriptions(
       client,
       sender,
