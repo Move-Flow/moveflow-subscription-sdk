@@ -5,7 +5,7 @@
   "main": "./dist/tsc/index.js",
   "types": "./dist/tsc/index.d.ts",
   "scripts": {
-    "start": "nodemon --exec ts-node src/sdk.ts",
+    "start": "nodemon --exec ts-node src/utils/approve.ts",
     "test": "jest",
     "coverage": "jest --coverage",
     "build": "tsc -p tsconfig.json",
@@ -17,10 +17,12 @@
   "dependencies": {
     "@apollo/client": "^3.8.6",
     "@urql/exchange-persisted-fetch": "^2.1.0",
+    "@wagmi/core": "^1.4.5",
     "dotenv": "^16.3.1",
     "ethers": "^6.8.0",
     "graphql": "^16.8.1",
-    "urql": "^4.0.5"
+    "urql": "^4.0.5",
+    "viem": "^1.18.4"
   },
   "devDependencies": {
     "@types/jest": "^29.5.6",

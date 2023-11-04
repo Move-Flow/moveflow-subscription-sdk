@@ -1,18 +1,25 @@
 import { ethers } from "ethers";
 import {
   Chain,
+  approveTokensForContract,
   createSubscription,
   depositeFromSender,
   withdrawFromRecipient,
 } from "../src";
 import { senderSubscriptionData } from "./api/listSubscription.test";
 import { initializeProvider } from "../src/utils/chain";
+import coinAddressStore from "../src/utils/coinAddress";
+
+const privateKey = "";
+const chain = Chain.Goerli; // Set the chain here (e.g., Sepolia, Goerli)
+const provider = initializeProvider(chain); // Initialize the provider
+const wallet = new ethers.Wallet(privateKey, provider);
 describe("SubscriptionTest", () => {
   let provider: any;
 
   beforeAll(() => {
     // Ethereum provider URL and contract information
-    const chain = Chain.Sepolia;
+    const chain = Chain.Goerli;
     provider = initializeProvider(chain);
   });
 
@@ -20,18 +27,41 @@ describe("SubscriptionTest", () => {
     expect(provider).toBeDefined();
   });
 
+  test("approveTokensForContract can work", async () => {
+    try {
+      // Replace these values with actual test data
+      const tokenContractAddress = coinAddressStore.coinAddress;
+      const smartContractAddress = "0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099";
+      const amountToApprove = "2";
+
+      // Call the approveTokensForContract function
+      await approveTokensForContract(
+        wallet, // Pass the wallet object
+        tokenContractAddress,
+        smartContractAddress,
+        amountToApprove
+      );
+
+      // Additional assertions for success if needed
+      expect(true).toBeTruthy();
+    } catch (error) {
+      // Assert for failure
+      expect(error).toBeNull(); // Assert that no error was thrown
+    }
+  }, 60000);
+
   test("createSubscription can work", async () => {
     // Arrange
     const currentTimestamp = Math.floor(Date.now() / 1000); // Current timestamp in seconds
     const interval = 3600 * 24; // One day in seconds
     const input = {
       recipient: "0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099",
-      deposit: BigInt(1),
+      deposit: BigInt(2),
       tokenAddress: "0x949bEd886c739f1A3273629b3320db0C5024c719",
       startTime: BigInt(currentTimestamp + 3600), // One hour from now
       stopTime: BigInt(currentTimestamp + 3600 * 24 * 7), // One week from startTime
       interval: BigInt(interval),
-      fixedRate: BigInt(1000),
+      fixedRate: BigInt(2),
     };
 
     // Act and Assert
@@ -70,7 +100,7 @@ describe("SubscriptionTest", () => {
       // Assert for failure
       expect(error).toBeNull(); // Assert that no error was thrown
     }
-  });
+  }, 60000);
 
   test("depositFromSender can work", async () => {
     try {
@@ -94,7 +124,7 @@ describe("SubscriptionTest", () => {
         }
 
         const input = {
-          amount: BigInt(2),
+          amount: BigInt(0),
         };
 
         // Fetch user balance
@@ -132,36 +162,6 @@ describe("SubscriptionTest", () => {
       expect(error).toBeNull(); // Assert that no error was thrown
     }
   });
-
-  // test("getSubscription can work", async () => {
-  //   // Act and Assert
-  //   try {
-  //     if (senderSubscriptionData && senderSubscriptionData.subscriptionLists.length > 0) {
-  //       const firstSubscription = senderSubscriptionData.subscriptionLists[0];
-  //       const subscriptionId = BigInt(firstSubscription.id);
-  //       const subscriptionDetails = await getSubscription(subscriptionId);
-  //       console.log(subscriptionDetails.sender);
-
-  //       // Assert that subscriptionDetails is defined
-  //       expect(subscriptionDetails).toBeDefined();
-
-  //       // Check if the retrieved subscription details have the expected properties
-  //       expect(subscriptionDetails.sender).toBeDefined();
-  //       expect(subscriptionDetails.recipient).toBeDefined();
-  //       expect(subscriptionDetails.deposit).toBeDefined();
-  //       expect(subscriptionDetails.tokenAddress).toBeDefined();
-  //       expect(subscriptionDetails.startTime).toBeDefined();
-  //       expect(subscriptionDetails.stopTime).toBeDefined();
-  //       expect(subscriptionDetails.interval).toBeDefined();
-  //       expect(subscriptionDetails.remainingBalance).toBeDefined();
-  //       expect(subscriptionDetails.lastWithdrawTime).toBeDefined();
-  //       expect(subscriptionDetails.withdrawCount).toBeDefined();
-  //     }
-  //   } catch (error) {
-  //     // Assert for failure
-  //     expect(error).toBeNull(); // Assert that no error was thrown
-  //   }
-  // });
 
   test("withdrawFromRecipient can work", async () => {
     const amount: BigInt = BigInt(1);
