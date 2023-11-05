@@ -1,4 +1,3 @@
-import { createClient, cacheExchange, fetchExchange } from "urql";
 import {
   listSenderSubscriptions,
   listRecipientSubscriptions,
@@ -18,21 +17,15 @@ import {
   GetSenderInfoData,
   GetRecipientInfoData,
 } from "../../src/utils/type";
+import { ChainType } from "../../src/utils/api/client-config";
 
-const APIURL =
-  "https://api.thegraph.com/subgraphs/name/albinlau/moveflow-geroli";
-
-const mockClient = createClient({
-  url: APIURL,
-  exchanges: [cacheExchange, fetchExchange],
-});
-
+const chainType: ChainType = "georli";
 let senderSubscriptionData: GetSubscriptionsSenderResponse;
 let recipientSubscriptionData: GetSubscriptionsByRecipientResponse;
 
 beforeAll(async () => {
   senderSubscriptionData = await listSenderSubscriptions(
-    mockClient,
+    chainType,
     "0x5866aa518cf0bbe994cc09bb3c3bae9290f77840",
     10,
     "startTime",
@@ -41,7 +34,7 @@ beforeAll(async () => {
   );
 
   recipientSubscriptionData = await listRecipientSubscriptions(
-    mockClient,
+    chainType,
     "0xa8e7813150a988e7f20193983fa3017155f3c162",
     10,
     "startTime",
@@ -118,7 +111,7 @@ describe("getSenderDepositLog", () => {
   test("fetch sender deposit logs with pagination", async () => {
     try {
       const response = await getSenderDepositLog(
-        mockClient,
+        chainType,
         "0x7a126",
         10,
         0,
@@ -143,7 +136,7 @@ describe("getWithdrawFromRecipientLog", () => {
   test("fetch sender withdrawal logs with pagination", async () => {
     try {
       const response = await getWithdrawFromRecipientLog(
-        mockClient,
+        chainType,
         "0x7a126",
         10,
         0,
@@ -167,7 +160,7 @@ describe("getSenderInfo", () => {
   test("fetch sender info", async () => {
     try {
       const response: GetSenderInfoData = await getSenderInfo(
-        mockClient,
+        chainType,
         "0x5866aa518cf0bbe994cc09bb3c3bae9290f77840"
       );
 
@@ -187,7 +180,7 @@ describe("getRecipientInfo", () => {
   test("fetch recipient info", async () => {
     try {
       const response: GetRecipientInfoData = await getRecipientInfo(
-        mockClient,
+        chainType,
         "0xa8e7813150a988e7f20193983fa3017155f3c162"
       );
 
@@ -207,7 +200,7 @@ describe("getSenderDepositLogAll", () => {
   test("fetch all sender deposit logs", async () => {
     try {
       const response = await getSenderDepositLogAll(
-        mockClient,
+        chainType,
         "0x5866aa518cf0bbe994cc09bb3c3bae9290f77840",
         10,
         0,
@@ -234,7 +227,7 @@ describe("getRecipientWithdrawLog", () => {
   test("fetch recipient withdrawal logs", async () => {
     try {
       const response = await getRecipientWithdrawLog(
-        mockClient,
+        chainType,
         "0xa8e7813150a988e7f20193983fa3017155f3c162",
         10,
         0,
@@ -261,7 +254,7 @@ describe("getSenderSubscriptions", () => {
   test("fetch sender subscriptions with pagination", async () => {
     try {
       const response = await getSenderSubscriptions(
-        mockClient,
+        chainType,
         "0x5866aa518cf0bbe994cc09bb3c3bae9290f77840",
         "0xa8e7813150a988e7f20193983fa3017155f3c162",
         10,

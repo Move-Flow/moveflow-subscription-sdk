@@ -12,8 +12,9 @@ import {
 } from "./utils/type";
 
 import { initializeProvider } from "./utils/chain";
-import client from "./utils/api/client-config";
+
 import { GET_SUBSCRIPTION_BY_ID } from "./utils/api/schemas";
+import createGraphQLClient, { ChainType } from "./utils/api/client-config";
 
 // Ethereum provider URL and contract information
 
@@ -251,7 +252,8 @@ const withdrawFromRecipient = async (input: {
         "Invalid withdrawal amount. Please provide a valid positive number."
       );
     }
-
+    const chainType: ChainType = "georli";
+    const client = createGraphQLClient(chainType);
     const response = await client
       .query(GET_SUBSCRIPTION_BY_ID, {
         subscriptionId,
@@ -289,8 +291,11 @@ const withdrawFromRecipient = async (input: {
  * Cancel a subscription if the current timestamp is less than the stop time.
  * @param subscriptionId The ID of the subscription to cancel.
  */
+
 const cancelSubscription = async (subscriptionId: string) => {
   try {
+    const chainType: ChainType = "georli";
+    const client = createGraphQLClient(chainType);
     const response = await client
       .query(GET_SUBSCRIPTION_BY_ID, {
         subscriptionId,

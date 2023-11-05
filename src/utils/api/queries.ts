@@ -1,4 +1,4 @@
-import { Client } from "urql";
+
 import {
   GetDepositeFromSenderLogData,
   GetRecipientInfoData,
@@ -21,8 +21,7 @@ import {
   GET_SENDER_SUBSCRIPTIONS_WITH_RECIPIENT_FILTER,
   GET_WITHDRAW_From_RECIPIENT_LOG,
 } from "./schemas";
-
-
+import createGraphQLClient, { ChainType } from "./client-config";
 
 /**
  * List subscriptions created by a specific sender.
@@ -37,7 +36,7 @@ import {
  * @throws {Error} Throws an error if the query fails or no subscriptions are found.
  */
 const listSenderSubscriptions = async (
-  client: Client,
+  chainType: ChainType,
   sender: string,
   first: number,
   orderBy: string,
@@ -46,7 +45,7 @@ const listSenderSubscriptions = async (
 ): Promise<GetSubscriptionsSenderResponse> => {
   try {
     const senderLowerCase = sender.toLowerCase();
-
+    const client = createGraphQLClient(chainType);
     const response = await client
       .query(GET_SENDER_SUBSCRIPTIONS, {
         sender: senderLowerCase,
@@ -92,7 +91,7 @@ const listSenderSubscriptions = async (
  * @throws {Error} Throws an error if the query fails or no subscriptions are found.
  */
 const listRecipientSubscriptions = async (
-  client: Client,
+  chainType: ChainType,
   recipient: string,
   first: number,
   orderBy: string,
@@ -101,6 +100,7 @@ const listRecipientSubscriptions = async (
 ): Promise<GetSubscriptionsByRecipientResponse> => {
   try {
     const recipientIdLowerCase = recipient.toLowerCase();
+    const client = createGraphQLClient(chainType);
     const response = await client
       .query(GET_Recipient_SUBSCRIPTIONS, {
         recipient: recipientIdLowerCase,
@@ -129,7 +129,7 @@ const listRecipientSubscriptions = async (
  * @throws {Error} Throws an error if the query fails, no data is found, or if there's an error response.
  */
 const getWithdrawFromRecipientLog = async (
-  client: Client,
+  chainType: ChainType,
   subscriptionId: string,
   first: number,
   skip: number,
@@ -137,6 +137,7 @@ const getWithdrawFromRecipientLog = async (
   orderDirection: string
 ): Promise<GetWithdrwaFromRecipientLogData> => {
   try {
+    const client = createGraphQLClient(chainType);
     const response = await client
       .query(GET_WITHDRAW_From_RECIPIENT_LOG, {
         id: subscriptionId,
@@ -181,7 +182,7 @@ const getWithdrawFromRecipientLog = async (
  */
 
 const getSenderDepositLog = async (
-  client: Client,
+  chainType: ChainType,
   subscriptionId: string,
   first: number,
   skip: number,
@@ -190,6 +191,7 @@ const getSenderDepositLog = async (
   orderDirection: string
 ): Promise<GetDepositeFromSenderLogData> => {
   try {
+    const client = createGraphQLClient(chainType);
     const response = await client
       .query(GET_SENDER_DEPOSIT_LOG, {
         id: subscriptionId,
@@ -229,10 +231,11 @@ const getSenderDepositLog = async (
  * @throws {Error} Throws an error if the query fails, no data is found, or if there's an error response.
  */
 const getSenderInfo = async (
-  client: Client,
+  chainType: ChainType,
   senderId: string
 ): Promise<GetSenderInfoData> => {
   try {
+    const client = createGraphQLClient(chainType);
     const response = await client
       .query(GET_SENDER_INFO, { id: senderId })
       .toPromise();
@@ -266,10 +269,11 @@ const getSenderInfo = async (
  * @throws {Error} Throws an error if the query fails, no data is found, or if there's an error response.
  */
 const getRecipientInfo = async (
-  client: Client,
+  chainType: ChainType,
   recipientId: string
 ): Promise<GetRecipientInfoData> => {
   try {
+    const client = createGraphQLClient(chainType);
     const response = await client
       .query(GET_RECIPIENT_INFO, {
         id: recipientId,
@@ -308,7 +312,7 @@ const getRecipientInfo = async (
  * @throws {Error} Throws an error if the query fails, no data is found, or if there's an error response.
  */
 const getSenderDepositLogAll = async (
-  client: Client,
+  chainType: ChainType,
   senderId: string,
   first: number,
   skip: number,
@@ -316,6 +320,7 @@ const getSenderDepositLogAll = async (
   orderDirection: string
 ): Promise<GetSenderDepositeLogAllData> => {
   try {
+    const client = createGraphQLClient(chainType);
     const response = await client
       .query(GET_SENDER_DEPOSIT_LOG_ALL, {
         id: senderId,
@@ -359,7 +364,7 @@ const getSenderDepositLogAll = async (
  * @throws {Error} Throws an error if the query fails, no data is found, or if there's an error response.
  */
 const getRecipientWithdrawLog = async (
-  client: Client,
+  chainType: ChainType,
   recipientId: string,
   first: number,
   skip: number,
@@ -367,6 +372,7 @@ const getRecipientWithdrawLog = async (
   orderDirection: string
 ): Promise<GetRecipientWithdrawLogData> => {
   try {
+    const client = createGraphQLClient(chainType);
     const response = await client
       .query(GET_RECIPIENT_WITHDRAW_LOG, {
         id: recipientId,
@@ -414,7 +420,7 @@ const getRecipientWithdrawLog = async (
  * @throws {Error} Throws an error if the query fails, no data is found, or if there's an error response.
  */
 const getSenderSubscriptions = async (
-  client: Client,
+  chainType: ChainType,
   senderId: string,
   recipientId: string,
   first: number,
@@ -423,6 +429,7 @@ const getSenderSubscriptions = async (
   orderDirection: string
 ): Promise<GetSenderSubscriptionsData> => {
   try {
+    const client = createGraphQLClient(chainType);
     const response = await client
       .query(GET_SENDER_SUBSCRIPTIONS_WITH_RECIPIENT_FILTER, {
         senderId,

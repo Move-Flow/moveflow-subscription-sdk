@@ -1,11 +1,32 @@
 import { createClient, cacheExchange, fetchExchange } from "urql";
 
-const APIURL =
-  "https://api.thegraph.com/subgraphs/name/albinlau/moveflow-geroli";
+// Define a map of chain types to GraphQL API URLs
+const chainTypeToApiUrl = {
+  georli: "https://api.thegraph.com/subgraphs/name/albinlau/moveflow-geroli",
+  // Add more chain types and corresponding URLs as needed
+};
 
-const client = createClient({
-  url: APIURL,
-  exchanges: [cacheExchange, fetchExchange],
-});
+// Define a type for chain types
+export type ChainType = keyof typeof chainTypeToApiUrl; // Export the ChainType type
 
-export default client;
+// Create a function to get the API URL based on the chain type
+const getApiUrl = (chainType: ChainType) => {
+  return chainTypeToApiUrl[chainType] || null;
+};
+
+const createGraphQLClient = (chainType: ChainType) => {
+  const apiUrl = getApiUrl(chainType);
+
+  if (!apiUrl) {
+    throw new Error(`Invalid chain type: ${chainType}`);
+  }
+
+  const client = createClient({
+    url: apiUrl,
+    exchanges: [cacheExchange, fetchExchange],
+  });
+
+  return client;
+};
+
+export default createGraphQLClient;
