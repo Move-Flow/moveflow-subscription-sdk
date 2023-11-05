@@ -49,6 +49,31 @@ query GetSubscriptions($recipient: String!, $first: Int, $skip: Int, $orderBy: S
 }
 `;
 
+// Subscription By ID
+// query.ts
+export const GET_SUBSCRIPTION_BY_ID = `
+  query MyQuery($subscriptionId: String) {
+    subscriptionList(id: $subscriptionId) {
+      id
+      recipient {
+        id
+      }
+      tokenAddress
+      deposit
+      remainingBalance
+      startTime
+      stopTime
+      interval
+      fixedRate
+      lastWithdrawTime
+      isEntity
+      withdrawableCount
+      withdrawnBalance
+      withdrawnCount
+    }
+  }
+`;
+
 // withdrawFromRecipient log using the subscription ID
 export const GET_WITHDRAW_From_RECIPIENT_LOG = `
   query GetSenderWithdrawLog($id: String!, $first: Int, $skip: Int, $orderBy: String, $orderDirection: String) {

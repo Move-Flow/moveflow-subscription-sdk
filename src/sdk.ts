@@ -7,12 +7,13 @@ import { listSenderSubscriptions } from "./utils/api/queries";
 import {
   CreateSubscriptionInput,
   DepositFromSenderInput,
-  WithdrawFromRecipientInput,
+  // WithdrawFromRecipientInput,
   Chain,
 } from "./utils/type";
 
 import { initializeProvider } from "./utils/chain";
 import client from "./utils/api/client-config";
+import { GET_SUBSCRIPTION_BY_ID } from "./utils/api/schemas";
 
 // Ethereum provider URL and contract information
 
@@ -227,40 +228,63 @@ const depositeFromSender = async (
  * @returns A boolean indicating whether the withdrawal was successfully initiated.
  * @throws An error if the subscription ID or withdrawal amount is invalid, or if the withdrawal fails.
  */
-const withdrawFromRecipient = async (
-  input: WithdrawFromRecipientInput
-): Promise<boolean> => {
+const withdrawFromRecipient = async (input: {
+  subscriptionId: string;
+  amount: BigInt;
+}) => {
   try {
     const { subscriptionId, amount } = input;
+
     // Check if subscriptionId is a positive integer
-    if (!subscriptionId || subscriptionId.toString() <= BigInt(0).toString()) {
+    if (!subscriptionId || BigInt(subscriptionId) <= BigInt(0)) {
       throw new Error(
         "Invalid subscription ID. Please provide a valid positive integer."
       );
     }
 
     // Check if the withdrawal amount is a positive number
-    if (!amount || amount.toString() <= BigInt(0).toString()) {
+    if (
+      !amount ||
+      BigInt(amount.toString()).toString() <= BigInt(0).toString()
+    ) {
       throw new Error(
         "Invalid withdrawal amount. Please provide a valid positive number."
       );
     }
 
-    // Perform the withdrawal logic if all checks pass
-    await contract.withdrawFromRecipient(subscriptionId, amount, {
-      gasLimit: 200000,
-    });
+    const response = await client
+      .query(GET_SUBSCRIPTION_BY_ID, {
+        subscriptionId,
+      })
+      .toPromise();
+    const subscription = response.data.subscriptionList;
+    if (!subscription || !subscription.id) {
+      throw new Error(`Subscription with ID ${subscriptionId} not found.`);
+    }
 
-    // Return true if the withdrawal was initiated successfully
-    console.log("withdraw successful");
-    return true;
+    const remainingBalance = BigInt(subscription.remainingBalance);
+    console.log(remainingBalance);
+
+    // Compare remainingBalance with the withdrawal amount
+    if (remainingBalance.toString() >= amount.toString()) {
+      // Perform the withdrawal logic if the balance allows
+      await contract.withdrawFromRecipient(subscriptionId, amount, {
+        gasLimit: 300000,
+      });
+
+      console.log("Withdrawal successful");
+      return true;
+    } else {
+      throw new Error("Withdrawal amount exceeds the available balance.");
+    }
   } catch (error) {
     console.error("Error in withdrawFromRecipient:", error);
     throw new Error(
-      "Failed to withdraw from recipient. Please check the input and try again."
+      "Failed to withdraw from the recipient. Please check the input and try again."
     );
   }
 };
+
 
 const cancelSubscription = async (subscriptionId: BigInt) => {
   try {

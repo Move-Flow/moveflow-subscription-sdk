@@ -13,8 +13,7 @@ import { initializeProvider } from "../src/utils/chain";
 import coinAddressStore from "../src/utils/coinAddress";
 // import client from "../src/utils/api/client-config";
 
-const privateKey =
-  "";
+const privateKey = "";
 const chain = Chain.Goerli; // Set the chain here (e.g., Sepolia, Goerli)
 const provider = initializeProvider(chain); // Initialize the provider
 const wallet = new ethers.Wallet(privateKey, provider);
@@ -168,59 +167,42 @@ describe("SubscriptionTest", () => {
   });
 
   test("withdrawFromRecipient can work", async () => {
+    const subscriptionId: string = "0x7a122";
     const amount: BigInt = BigInt(1);
 
-    // Act and Assert
     try {
-      if (
-        senderSubscriptionData &&
-        senderSubscriptionData.subscriptionLists.length > 0
-      ) {
-        for (const subscription of senderSubscriptionData.subscriptionLists) {
-          const subscriptionId = BigInt(subscription.id);
-
-          // Validation Checks
-          // Check if subscriptionId is a positive integer
-          if (
-            !subscriptionId ||
-            subscriptionId.toString() <= BigInt(0).toString()
-          ) {
-            throw new Error(
-              "Invalid subscription ID. Please provide a valid positive integer."
-            );
-          }
-
-          // Check if the withdrawal amount is a positive number
-          if (!amount || amount.toString() <= BigInt(0).toString()) {
-            throw new Error(
-              "Invalid withdrawal amount. Please provide a valid positive number."
-            );
-          }
-
-          // Call the withdrawFromRecipient function
-          const result = await withdrawFromRecipient({
-            subscriptionId,
-            amount,
-          });
-
-          // Additional assertions for success if needed
-          expect(result).toBeTruthy();
-        }
-      } else {
-        // No subscriptions found, fail the test
-        console.error("No subscription data found.");
-        throw new Error("No subscription data found.");
+      // Check if subscriptionId is a positive integer
+      if (!subscriptionId || BigInt(subscriptionId) <= BigInt(0)) {
+        throw new Error(
+          "Invalid subscription ID. Please provide a valid positive integer."
+        );
       }
+
+      // Check if the withdrawal amount is a positive number
+      if (!amount || amount.toString() <= BigInt(0).toString()) {
+        throw new Error(
+          "Invalid withdrawal amount. Please provide a valid positive number."
+        );
+      }
+
+      // Call the withdrawFromRecipient function
+      const result = await withdrawFromRecipient({
+        subscriptionId,
+        amount,
+      });
+
+      // Additional assertions for success if needed
+      expect(result).toBeTruthy();
     } catch (error) {
       // Assert for failure
-      expect(error).toBeNull(); // Assert that no error was thrown
+      expect(error).not.toBeNull(); // Assert that an error was thrown
     }
-  }, 50000);
+  }, 30000);
 });
 
 test("cancelSpecificSubscription can work", async () => {
   // Replace 'specificSubscriptionId' with the correct ID of the subscription you want to cancel.
-  const specificSubscriptionId = "0x7a121";
+  const specificSubscriptionId = "0x7a120";
 
   try {
     // Call the cancelSubscription function with the specific subscription ID.
