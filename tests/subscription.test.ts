@@ -202,11 +202,10 @@ describe("SubscriptionTest", () => {
 
 test("cancelSpecificSubscription can work", async () => {
   // Replace 'specificSubscriptionId' with the correct ID of the subscription you want to cancel.
-  const specificSubscriptionId = "0x7a120";
+  const specificSubscriptionId = "0x7a122";
 
   try {
-    // Call the cancelSubscription function with the specific subscription ID.
-    const result = await cancelSubscription(BigInt(specificSubscriptionId));
+    const result = await cancelSubscription(specificSubscriptionId);
 
     // Assert the result if needed (e.g., check if the cancellation was successful).
     expect(result).toBeDefined();

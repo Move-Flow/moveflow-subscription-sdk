@@ -3,7 +3,7 @@ require("dotenv").config();
 import SubscriptionABI from "./lib/contractABIs/subsrciptionABI.json";
 import ApproveABI from "./lib/contractABIs/approveABI.json";
 import coinAddressStore from "./utils/coinAddress";
-import { listSenderSubscriptions } from "./utils/api/queries";
+
 import {
   CreateSubscriptionInput,
   DepositFromSenderInput,
@@ -17,16 +17,16 @@ import { GET_SUBSCRIPTION_BY_ID } from "./utils/api/schemas";
 
 // Ethereum provider URL and contract information
 
-const contractAddress = "0xEAB439707cA5F8e4e47c697629E77aE26842cbba";
 const privateKey = "";
 const chain = Chain.Goerli; // Set the chain here (e.g., Sepolia, Goerli)
 const provider = initializeProvider(chain); // Initialize the provider
 const wallet = new ethers.Wallet(privateKey, provider);
 
 const tokenContractAddress = coinAddressStore.coinAddress;
+const smartContractAddress = "0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099";
+const contractAddress = "0xEAB439707cA5F8e4e47c697629E77aE26842cbba";
 
 const amountToApprove = "7";
-const smartContractAddress = "0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099";
 const contract = new ethers.Contract(
   smartContractAddress,
   SubscriptionABI,
@@ -285,45 +285,31 @@ const withdrawFromRecipient = async (input: {
   }
 };
 
-
-const cancelSubscription = async (subscriptionId: BigInt) => {
+/**
+ * Cancel a subscription if the current timestamp is less than the stop time.
+ * @param subscriptionId The ID of the subscription to cancel.
+ */
+const cancelSubscription = async (subscriptionId: string) => {
   try {
-    // Fetch the subscription details using the listSenderSubscriptions function
-    const sender = wallet.address.toLocaleLowerCase();
-    const subscriptions = await listSenderSubscriptions(
-      client,
-      sender,
-      10,
-      "startTime",
-      0,
-      "asc"
-    );
+    const response = await client
+      .query(GET_SUBSCRIPTION_BY_ID, {
+        subscriptionId,
+      })
+      .toPromise();
+    const subscription = response.data.subscriptionList;
+    console.log(subscription);
 
-    // Find the subscription with the given subscriptionId
-    const subscription = subscriptions.subscriptionLists.find(
-      (sub) => BigInt(sub.id).toString() === subscriptionId.toString()
-    );
-
-    // Check if the subscription is found and if it's allowed to be canceled
     if (subscription) {
+      // Check if the subscription is found
       const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
-      const subscriptionStartTime = BigInt(subscription.startTime.toString()); // Subscription start time in seconds
-      const subscriptionInterval = BigInt(subscription.interval.toString()); // Subscription interval in seconds
-      const withdrawCount = BigInt(subscription.withdrawnCount.toString());
+      const stopTime = BigInt(subscription.stopTime.toString()); // Stop time in seconds
 
-      if (
-        (BigInt(currentTime) - BigInt(subscriptionStartTime.toString())) /
-          BigInt(subscriptionInterval.toString()) !==
-        BigInt(withdrawCount.toString())
-      ) {
-        // Continue with the cancellation logic
+      if (currentTime < stopTime) {
+        // Subscription can be canceled
         const result = await contract.cancelSubscription(subscriptionId, {
-          gasPrice: ethers.parseUnits("10", "gwei"), // Adjust the gas price as needed
-          gasLimit: 100000, // You can also adjust the gas limit if necessary
+          gasLimit: 200000, // Adjust the gas limit as needed
         });
 
-        console.log(result);
-        // Check if the cancellation was successful
         if (result) {
           console.log(
             `Subscription with ID ${subscriptionId} has been canceled.`
@@ -334,8 +320,8 @@ const cancelSubscription = async (subscriptionId: BigInt) => {
           );
         }
       } else {
-        console.error("Subscription not allowed to cancel.");
-        throw new Error("Subscription not allowed to cancel.");
+        console.error("Subscription cannot be canceled after the stop time.");
+        throw new Error("Subscription cannot be canceled after the stop time.");
       }
     } else {
       console.error(`Subscription with ID ${subscriptionId} not found.`);
@@ -348,7 +334,6 @@ const cancelSubscription = async (subscriptionId: BigInt) => {
     );
   }
 };
-
 export {
   createSubscription,
   depositeFromSender,
