@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 require("dotenv").config();
 import SubscriptionABI from "./lib/contractABIs/subsrciptionABI.json";
 import ApproveABI from "./lib/contractABIs/approveABI.json";
-import coinAddressStore from "./utils/coinAddress";
+import coinAddressStore from "./utils/contractAddress";
 
 import {
   CreateSubscriptionInput,
@@ -18,14 +18,15 @@ import createGraphQLClient, { ChainType } from "./utils/api/client-config";
 
 // Ethereum provider URL and contract information
 
-const privateKey = "";
+const privateKey = "753e10bc305827ad956b98c178ed80b0c98900d40a6ecec3e05fe373ad9f85a3";
 const chain = Chain.Goerli; // Set the chain here (e.g., Sepolia, Goerli)
 const provider = initializeProvider(chain); // Initialize the provider
 const wallet = new ethers.Wallet(privateKey, provider);
 
+// Coin and Contract address
+
 const tokenContractAddress = coinAddressStore.coinAddress;
-const smartContractAddress = "0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099";
-const contractAddress = "0xEAB439707cA5F8e4e47c697629E77aE26842cbba";
+const smartContractAddress = coinAddressStore.smartContractAddress;
 
 const amountToApprove = "7";
 const contract = new ethers.Contract(
@@ -104,7 +105,7 @@ const validateRecipient = (recipient: string) => {
     console.log("my address:", wallet.address);
     throw new Error("Subscription to the caller is not allowed.");
   }
-  if (recipient === contractAddress) {
+  if (recipient === tokenContractAddress) {
     throw new Error("Subscription to the contract itself is not allowed.");
   }
 };
