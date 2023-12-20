@@ -14,7 +14,7 @@ import { GET_SUBSCRIPTION_BY_ID } from "./utils/api/schemas";
 
 const contractAddress = "0xEAB439707cA5F8e4e47c697629E77aE26842cbba";
 const privateKey =
-  "753e10bc305827ad956b98c178ed80b0c98900d40a6ecec3e05fe373ad9f85a3";
+  "Your private key";
 const chain = Chain.Goerli; // Set the chain here (e.g., Sepolia, Goerli)
 const provider = initializeProvider(chain); // Initialize the provider
 const wallet = new ethers.Wallet(privateKey, provider);
