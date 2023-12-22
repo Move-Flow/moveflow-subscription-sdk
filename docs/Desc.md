@@ -18,11 +18,11 @@ To get started, you'll need to initialize the SDK with your Ethereum provider UR
 
 
 ```js
-const contractAddress = "0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099";
+const contractAddress = "0xF6F48D9F9220C2a30d070e5011817Cc87Ca33f87";
 const privateKey = "your_private_key_here";
-const chain = Chain.Sepolia; 
+const chain = Chain.Viction; 
 
-// Set the chain (e.g., Sepolia, Goerli)
+// Set the chain (e.g., Sepolia, Goerli, Viction_Testnet)
 
 // Step 1: Initialize an Ethereum provider
 const provider = initializeProvider(chain);
@@ -171,14 +171,15 @@ try {
 
 - subscriptionId(number): subscriptionId is the only input field. The ID of the subscription to cancel.
 
-### Query subscription API
+
+### Query subscription API (Comming Soon)
 
 #### 1. List subscriptions of the specific sender
 The API list subscriptions created by a specific sender. The query API supports paginate.
 
 ```js
 const senderSubscriptionData = await listSenderSubscriptions(
-    "georli",
+    "viction-testnet",
     "0xSenderAddress",
     10,            //first
     "startTime",  //orderBy: startTime or stopTime
@@ -202,7 +203,7 @@ The API list subscriptions received by a specific recipient. The query API suppo
 ```js
 
 const recipientSubscriptionData = await listRecipientSubscriptions(
-    "georli",
+    "viction-testnet",
     "0xRecipientAddress",
     10,            //first
     "startTime",  //orderBy: startTime or stopTime
@@ -227,7 +228,7 @@ The API queries the logs of deposit from sender in the specific subscription. Th
 
 ```js
 const response = await getSenderDepositLog(
-    "georli",
+    "viction-testnet",
     "subscriptionId",
     10,
     0,
@@ -251,7 +252,7 @@ The API queries the logs of deposit from recipient in the specific subscription.
 
 ```js
 const response = await getWithdrawFromRecipientLog(
-    "georli",
+    "viction-testnet",
     "subscriptionId",
     10,
     0,
@@ -275,7 +276,7 @@ The input param for querying the logs of deposit from recipient in the specific 
 The API queries the overall of sender.
 ```js
 const response: GetSenderInfoData = await getSenderInfo(
-    "georli",
+    "viction-testnet",
     "0xSenderAddress"
 );
 
@@ -292,7 +293,7 @@ The API queries the overall of recipient.
 
 ```js
 const response: GetRecipientInfoData = await getRecipientInfo(
-    "georli",
+    "viction-testnet",
     "0xRecipientAddress"
 );
 
@@ -306,7 +307,7 @@ the input parameters include:
 #### 7. Query all logs of deposit from a specific sender
 The API queries all logs of deposit from a specific sender. The query API supports paginate.
 ```js
-const "georli" = await getSenderDepositLogAll(
+const response = await getSenderDepositLogAll(
     mockClient,
     "0xSenderAddress",
     10,
@@ -332,7 +333,7 @@ the input parameters include:
 The API queries all logs of withdrawal from a specific recipient. The query API supports paginate.
 
 ```js
-const "georli" = await getRecipientWithdrawLog(
+const response = await getRecipientWithdrawLog(
     mockClient,
     "0xRecipientAddress",
     10,

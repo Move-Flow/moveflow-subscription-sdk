@@ -4,9 +4,9 @@ Moveflow Subscription SDK is a TypeScript SDK for interacting with Ethereum smar
 
 ## Installation
 ```
-npm install --save  moveflow-subscription/sdk
+npm install --save  @moveflow/sdk-evm
 # or
-yarn add  moveflow-subscription/sdk
+yarn add  @moveflow/sdk-evm
 ```
 
 To use this SDK in your project, you can install it via npm:
@@ -17,9 +17,9 @@ To get started, you'll need to initialize the SDK with your Ethereum provider UR
 
 ```
 typescript
-const contractAddress = "0xbDf6Fb9AF46712ebf58B9CB0c23B4a881BF58099";
+const contractAddress = "0xF6F48D9F9220C2a30d070e5011817Cc87Ca33f87";
 const privateKey = "your_private_key_here";
-const chain = Chain.Sepolia; // Set the chain (e.g., Sepolia, Goerli)
+const chain = Chain.Viction; // Set the chain (e.g., Viction, Sepolia, Goerli)
 
 // Step 1: Initialize an Ethereum provider
 const provider = initializeProvider(chain);
