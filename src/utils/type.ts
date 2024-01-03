@@ -23,6 +23,8 @@ export interface MoveflowConfig {
 export enum Chain {
   Goerli = "goerli",
   Sepolia = "sepolia",
+  Lightlink_Testnet="lightlink-testnet",
+  Lightlink="lightlink",
 }
 
 export interface WithdrawFromRecipientInput {

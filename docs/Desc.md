@@ -20,9 +20,9 @@ To get started, you'll need to initialize the SDK with your Ethereum provider UR
 ```js
 const contractAddress = "0xF6F48D9F9220C2a30d070e5011817Cc87Ca33f87";
 const privateKey = "your_private_key_here";
-const chain = Chain.Viction; 
+const chain = Chain.Lightlink_Testnet; 
 
-// Set the chain (e.g., Sepolia, Goerli, Viction_Testnet)
+// Set the chain (e.g., Sepolia, Goerli, Lightlink_Testnet)
 
 // Step 1: Initialize an Ethereum provider
 const provider = initializeProvider(chain);
@@ -179,7 +179,7 @@ The API list subscriptions created by a specific sender. The query API supports 
 
 ```js
 const senderSubscriptionData = await listSenderSubscriptions(
-    "viction-testnet",
+    "Lightlink-testnet",
     "0xSenderAddress",
     10,            //first
     "startTime",  //orderBy: startTime or stopTime
@@ -203,7 +203,7 @@ The API list subscriptions received by a specific recipient. The query API suppo
 ```js
 
 const recipientSubscriptionData = await listRecipientSubscriptions(
-    "viction-testnet",
+    "Lightlink-testnet",
     "0xRecipientAddress",
     10,            //first
     "startTime",  //orderBy: startTime or stopTime
@@ -228,7 +228,7 @@ The API queries the logs of deposit from sender in the specific subscription. Th
 
 ```js
 const response = await getSenderDepositLog(
-    "viction-testnet",
+    "Lightlink-testnet",
     "subscriptionId",
     10,
     0,
@@ -252,7 +252,7 @@ The API queries the logs of deposit from recipient in the specific subscription.
 
 ```js
 const response = await getWithdrawFromRecipientLog(
-    "viction-testnet",
+    "Lightlink-testnet",
     "subscriptionId",
     10,
     0,
@@ -276,7 +276,7 @@ The input param for querying the logs of deposit from recipient in the specific 
 The API queries the overall of sender.
 ```js
 const response: GetSenderInfoData = await getSenderInfo(
-    "viction-testnet",
+    "Lightlink-testnet",
     "0xSenderAddress"
 );
 
@@ -293,7 +293,7 @@ The API queries the overall of recipient.
 
 ```js
 const response: GetRecipientInfoData = await getRecipientInfo(
-    "viction-testnet",
+    "Lightlink-testnet",
     "0xRecipientAddress"
 );
 
