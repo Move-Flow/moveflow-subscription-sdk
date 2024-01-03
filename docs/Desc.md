@@ -18,7 +18,7 @@ To get started, you'll need to initialize the SDK with your Ethereum provider UR
 
 
 ```js
-const contractAddress = "0xF6F48D9F9220C2a30d070e5011817Cc87Ca33f87";
+const contractAddress = "0x35A7B4067b2A652E19202264Cd9977451ab3a7dC";
 const privateKey = "your_private_key_here";
 const chain = Chain.Lightlink_Testnet; 
 
